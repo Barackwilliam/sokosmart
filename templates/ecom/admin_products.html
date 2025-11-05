@@ -1,0 +1,132 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- Bootstrap 5 CSS and FontAwesome are assumed to be included in admin_base.html -->
+
+<style>
+  body {
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: white;
+  }
+
+  h6.panel-title {
+    text-align: center;
+    font-weight: 600;
+    padding: 1rem 0;
+  }
+
+  .container {
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .table thead th {
+    background-color: #dc3545; /* Bootstrap danger */
+    color: white;
+  }
+
+  .table tbody tr:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  /* Floating button */
+  .float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 40px;
+    right: 40px;
+    background-color: #28a745; /* Bootstrap success */
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: background-color 0.3s ease;
+    z-index: 1000;
+  }
+
+  .float:hover {
+    background-color: #218838;
+    text-decoration: none;
+    color: white;
+  }
+
+  .my-float {
+    font-size: 28px;
+    line-height: 60px;
+  }
+
+  /* Responsive image */
+  .product-img {
+    max-width: 40px;
+    max-height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .container {
+      margin: 1rem;
+    }
+
+    .table-responsive {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="card shadow">
+    <div class="card-header bg-danger text-white">
+      <h6 class="panel-title mb-0">Total Products</h6>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered align-middle" id="dev-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Image</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if products %}
+            {% for p in products %}
+              <tr>
+                <td>{{ p.name }}</td>
+                <td><img src="{{ p.product_image}}" alt="{{ p.name }}" class="product-img" /></td>
+                <td>{{ p.price }}</td>
+                <td>{{ p.description }}</td>
+                <td>
+                  <a class="btn btn-primary btn-sm" href="{% url 'update-product' p.id %}" aria-label="Edit {{ p.name }}">
+                    <i>Edit</i>
+                  </a>
+                  <a class="btn btn-danger btn-sm" href="{% url 'delete-product' p.id %}" aria-label="Delete {{ p.name }}">
+                    <i>Delete</i>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="5" class="text-center text-white py-4">
+                <h5 style="color: black;">No Products Available</h5>
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Add product floating button -->
+<a href="/admin-add-product" class="float" aria-label="Add new product">
+  <i class="fas fa-plus my-float"></i>
+</a>
+
+{% endblock content %}

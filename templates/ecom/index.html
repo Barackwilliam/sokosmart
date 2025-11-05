@@ -1,0 +1,350 @@
+{% extends 'ecom/homebase.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  :root {
+    --bg-gradient: linear-gradient(135deg, #0f1e38 0%, #1f2f58 80%);
+    --surface: #1f2f58;
+    --card: #1d2a4f;
+    --text: #e8ebf7;
+    --muted: #8fa3bf;
+    --accent: #ff7a29;
+    --accent-dark: #e06622;
+    --radius: 0.75rem;
+    --shadow: 0 20px 40px -10px rgba(15, 30, 56, 0.35);
+    --transition: 0.35s cubic-bezier(0.4, 0.2, 0.2, 1);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  /* ========== BASE STYLES ========== */
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ========== CATEGORIES SECTION ========== */
+  .categories-section {
+    padding: 3rem 5%;
+    position: relative;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+  }
+
+  .categories-container {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 1rem 0;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .categories-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-card {
+    min-width: 180px;
+    height: 220px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    scroll-snap-align: start;
+    transition: var(--transition);
+    background: var(--card);
+    box-shadow: var(--shadow);
+    flex-shrink: 0;
+  }
+
+  .category-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .category-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+    opacity: 0.85;
+  }
+
+  .category-card:hover .category-img {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+
+  .category-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.2rem;
+    background: linear-gradient(to top, rgba(15, 30, 56, 0.9), transparent);
+  }
+
+  .category-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+
+  .category-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: calc(var(--radius) - 0.25rem);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .category-btn:hover {
+    background: var(--accent-dark);
+  }
+
+  /* ========== PRODUCTS SECTION ========== */
+  .products-section {
+    padding: 2rem 5%;
+    background: var(--surface);
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .product-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    position: relative;
+  }
+
+  .product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .product-badge {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    background: var(--accent);
+    color: white;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.7rem;
+    z-index: 1;
+  }
+
+  .product-img-container {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+  }
+
+  .product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: var(--transition);
+  }
+
+  .product-card:hover .product-img {
+    transform: scale(1.05);
+  }
+
+  .product-info {
+    padding: 1rem;
+  }
+
+  .product-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+    color: var(--text);
+  }
+
+  .product-price {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.1rem;
+  }
+
+  .add-to-cart {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    width: 100%;
+    margin-top: 0.8rem;
+    transition: var(--transition);
+  }
+
+  .add-to-cart:hover {
+    background: var(--accent-dark);
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 768px) {
+    .categories-section,
+    .products-section {
+      padding: 2rem 1rem;
+    }
+    
+    .category-card {
+      min-width: 150px;
+      height: 180px;
+    }
+
+    .products-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .product-img-container {
+      height: 150px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .section-title {
+      font-size: 1.5rem;
+    }
+
+    .category-card {
+      min-width: 120px;
+      height: 150px;
+    }
+
+    .category-title {
+      font-size: 0.85rem;
+    }
+
+    .products-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<!-- ========== CATEGORIES SECTION ========== -->
+<section class="categories-section">
+  <h2 class="section-title">Shop By Categories</h2>
+  <div class="categories-container" id="categoriesContainer">
+    {% for category in categories %}
+    <div class="category-card">
+      <img src="{{ category.category_image }}" alt="{{ category.name }}" class="category-img">
+      <div class="category-overlay">
+        <h3 class="category-title">{{ category.name }}</h3>
+        <button class="category-btn" onclick="window.location.href='?category={{ category.id }}'">Explore</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ========== PRODUCTS SECTION ========== -->
+<section class="products-section">
+  <h2 class="section-title">Featured Products</h2>
+  <div class="products-grid">
+    {% for product in products %}
+    <div class="product-card">
+      {% if product.discount %}
+      <span class="product-badge">-{{ product.discount }}%</span>
+      {% endif %}
+      <div class="product-img-container">
+        <img src="{{ product.product_image }}" alt="{{ product.name }}" class="product-img">
+      </div>
+      <div class="product-info">
+        <h3 class="product-title">{{ product.name }}</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="product-price">Tsh. {{ product.price }}</span>
+          <button class="add-to-cart" onclick="window.location.href='{% url 'add-to-cart' product.id %}'">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ========== AUTO-SLIDING CATEGORIES ========== -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('categoriesContainer');
+    let scrollAmount = 0;
+    const scrollStep = 200;
+    let scrollInterval;
+    
+    function startAutoScroll() {
+      scrollInterval = setInterval(() => {
+        scrollAmount += scrollStep;
+        if (scrollAmount >= container.scrollWidth - container.clientWidth) {
+          scrollAmount = 0;
+        }
+        container.scrollTo({
+          left: scrollAmount,
+          behavior: 'smooth'
+        });
+      }, 3500); // Slower scroll speed
+    }
+    
+    function stopAutoScroll() {
+      clearInterval(scrollInterval);
+    }
+    
+    // Start auto-scroll
+    startAutoScroll();
+    
+    // Pause on hover
+    container.addEventListener('mouseenter', stopAutoScroll);
+    container.addEventListener('mouseleave', startAutoScroll);
+    
+    // Touch support for mobile
+    container.addEventListener('touchstart', stopAutoScroll);
+    container.addEventListener('touchend', startAutoScroll);
+  });
+</script>
+
+<!-- ========== 3D HOVER EFFECTS ========== -->
+<script>
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const x = e.clientX - card.getBoundingClientRect().left;
+      const y = e.clientY - card.getBoundingClientRect().top;
+      
+      const centerX = card.offsetWidth / 2;
+      const centerY = card.offsetHeight / 2;
+      
+      const angleX = (y - centerY) / 20; // Reduced rotation for subtle effect
+      const angleY = (centerX - x) / 20;
+      
+      card.style.transform = `perspective(1000px) rotateX(${angleX}deg) rotateY(${angleY}deg) scale(1.02)`;
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+    });
+  });
+</script>
+
+{% endblock content %}

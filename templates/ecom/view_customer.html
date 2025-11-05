@@ -1,0 +1,181 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  body {
+    background-color: #3508fd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 1.5rem 1rem;
+    color: white;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .container {
+    max-width: 960px;
+    margin: 2rem auto 4rem auto;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    color: #f1f1f1;
+  }
+
+  .card-header {
+    background-color: #dc3545 !important; /* Bootstrap danger */
+    color: white;
+    font-weight: 700;
+    text-align: center;
+    font-size: 1.2rem;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  /* Table styling */
+  .table {
+    color: #f1f1f1;
+  }
+
+  .table thead th {
+    background-color: #b02a37; /* Darker danger shade */
+    color: white;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .table tbody tr:hover {
+    background-color: rgba(220, 53, 69, 0.2);
+  }
+
+  .table tbody td, .table thead th {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  /* Profile picture */
+  .profile-pic {
+    max-width: 40px;
+    max-height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #dc3545;
+  }
+
+  /* Buttons styling */
+  .btn-primary {
+    background-color: #3a4b8f;
+    border: none;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+  .btn-primary:hover {
+    background-color: #1f2f60;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    border: none;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+  }
+  .btn-danger:hover {
+    background-color: #b02a37;
+  }
+
+  /* Responsive */
+  @media (max-width: 576px) {
+    body {
+      padding: 1rem 0.8rem;
+    }
+
+    .container {
+      margin: 1rem;
+    }
+
+    .table-responsive {
+      font-size: 0.85rem;
+    }
+
+    #dev-table th, #dev-table td {
+      padding: 0.3rem 0.4rem;
+      font-size: 0.85rem;
+    }
+
+    /* Hide Address column on small screens for brevity */
+    #dev-table th:nth-child(4),
+    #dev-table td:nth-child(4) {
+      display: none;
+    }
+
+    .profile-pic {
+      max-width: 30px !important;
+      max-height: 30px !important;
+    }
+
+    .btn-primary, .btn-danger {
+      padding: 0.25rem 0.6rem;
+      font-size: 0.85rem;
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="card shadow">
+    <div class="card-header">
+      Total Customers
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered align-middle" id="dev-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Picture</th>
+            <th>Contact</th>
+            <th>Address</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for c in customers %}
+          <tr>
+            <td>{{ c.get_name }}</td>
+            <td>
+              {% if c.profile_pic %}
+                <img src="{{ c.profile_pic}}" alt="customer" class="profile-pic" />
+              {% else %}
+                <span class="text-muted">No Image</span>
+              {% endif %}
+            </td>
+            <td>{{ c.mobile }}</td>
+            <td>{{ c.address }}</td>
+            <td>
+              <a class="btn btn-primary btn-sm" href="{% url 'update-customer' c.id %}" aria-label="Edit {{ c.get_name }}">
+                Edit
+              </a>
+              <a class="btn btn-danger btn-sm" href="{% url 'delete-customer' c.id %}" aria-label="Delete {{ c.get_name }}">
+                Delete
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center py-4">
+              <h5>No Customers Available</h5>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

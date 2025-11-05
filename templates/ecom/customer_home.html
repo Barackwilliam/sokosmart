@@ -1,0 +1,298 @@
+{% extends 'ecom/customer_base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  :root {
+    --bg: linear-gradient(135deg,#0f1e38 0%,#1f2f58 80%);
+    --card-bg: #1f2f58;
+    --panel-bg: rgba(31,47,88,.85);
+    --radius: .75rem;
+    --accent: #ff7a29;
+    --text-light: #e8ebf7;
+    --muted: #8fa3bf;
+    --shadow: 0 25px 50px -12px rgba(15,30,56,.4);
+    --transition: .35s cubic-bezier(.4,.2,.2,1);
+  }
+
+  body, html {
+    background: var(--bg);
+    color: var(--text-light);
+    font-family: 'Inter', system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 16px 40px;
+  }
+
+  .section-title {
+    text-align: center;
+    color: #f0f4fb;
+    margin: 0 0 24px;
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+
+  .slider-container {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    margin: 0 auto 32px;
+    border-radius: 12px;
+    height: 160px;
+  }
+
+  .menu {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 6px;
+    z-index: 900;
+    display: flex;
+    gap: 8px;
+  }
+  .menu label {
+    cursor: pointer;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: rgba(255,255,255,.85);
+    border-radius: 50%;
+    margin: 0;
+    transition: transform .2s, background .25s;
+  }
+  .menu label:hover,
+  .menu label:focus {
+    transform: scale(1.3);
+    background: #ff7a29;
+  }
+
+  .slide {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    z-index: 10;
+    background-size: cover;
+    background-position: 50% 50%;
+    transition: left .65s ease-out;
+    height: 100%;
+    padding: 1rem 0;
+    border-radius: 12px;
+  }
+  [id^="slide"]:checked + .slide {
+    left: 0;
+    z-index: 100;
+  }
+  .slide-1 { background-image: url("{% static 'images/banner.png' %}"); }
+  .slide-2 { background-image: url("{% static 'images/banner.png' %}"); }
+  .slide-3 { background-image: url("{% static 'images/banner.png' %}"); }
+  .slide-4 { background-image: url("{% static 'images/banner.png' %}"); }
+
+  .products-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .product-card {
+    flex: 1 1 calc(33.33% - 32px);
+    max-width: 360px;
+    min-width: 240px;
+    display: flex;
+  }
+
+  .el-wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--panel-bg);
+    padding: 16px 16px 12px;
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition), box-shadow var(--transition);
+    box-shadow: var(--shadow);
+  }
+  .el-wrapper:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 35px 70px -15px rgba(15,30,56,.6);
+  }
+
+  .box-up {
+    text-align: center;
+    position: relative;
+  }
+  .img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    transition: filter .3s ease, opacity .3s ease;
+    display: block;
+    object-fit: cover;
+  }
+
+  .info-inner {
+    text-align: left;
+    margin-bottom: 8px;
+  }
+
+  .p-company {
+    display: inline-block;
+    background-color: rgba(255,255,255,.08);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .a-size {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.3;
+    margin-top: 4px;
+    max-height: 3em;
+    overflow: hidden;
+  }
+
+  .box-down {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255,255,255,.08);
+    padding: 6px 12px;
+    border-radius: 8px;
+    flex: 1 1 auto;
+  }
+
+  .cart-link {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-size: .85rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    flex: 1 1 auto;
+    justify-content: center;
+    transition: background .25s;
+    white-space: nowrap;
+  }
+  .cart-link:hover {
+    background: var(--accent-dark);
+    text-decoration: none;
+  }
+  .cart-link i {
+    font-size: 0.9rem;
+  }
+
+  .no-results {
+    text-align: center;
+    margin: 60px 0;
+    font-size: 1.25rem;
+    color: #f0f4fb;
+  }
+
+  /* responsive */
+  @media (max-width: 1024px) {
+    .product-card { flex: 1 1 calc(50% - 24px); }
+  }
+  @media (max-width: 768px) {
+    .product-card { flex: 1 1 100%; }
+    .slider-container { height: 120px; }
+    .box-down { flex-direction: column; align-items: stretch; }
+    .price, .cart-link { width: 100%; justify-content: center; }
+    .cart-link { margin-top: 8px; }
+  }
+
+  /* disable hover filter on touch */
+  @media (hover: none) {
+    .el-wrapper:hover .img { filter: none; opacity: 1; }
+  }
+</style>
+
+<div class="container-inner">
+  <h3 class="section-title">{{ word }}</h3>
+
+  <div class="slider-container" aria-label="Promotional slider">
+    <div class="menu" role="tablist">
+      <label for="slide-dot-1" aria-label="Slide 1" role="button" tabindex="0"></label>
+      <label for="slide-dot-2" aria-label="Slide 2" role="button" tabindex="0"></label>
+      <label for="slide-dot-3" aria-label="Slide 3" role="button" tabindex="0"></label>
+      <label for="slide-dot-4" aria-label="Slide 4" role="button" tabindex="0"></label>
+    </div>
+
+    <input id="slide-dot-1" name="slides" type="radio" hidden checked>
+    <div class="slide slide-1" role="img" aria-label="Banner image 1"></div>
+
+    <input id="slide-dot-2" name="slides" type="radio" hidden>
+    <div class="slide slide-2" role="img" aria-label="Banner image 2"></div>
+
+    <input id="slide-dot-3" name="slides" type="radio" hidden>
+    <div class="slide slide-3" role="img" aria-label="Banner image 3"></div>
+
+    <input id="slide-dot-4" name="slides" type="radio" hidden>
+    <div class="slide slide-4" role="img" aria-label="Banner image 4"></div>
+  </div>
+
+  {% if products %}
+    <div class="products-wrapper" aria-label="Product list">
+      {% for p in products %}
+        <div class="product-card">
+          <div class="el-wrapper" aria-label="{{ p.name }}">
+            <div class="box-up">
+              <img class="img" src="{{ p.product_image }}" alt="{{ p.name }}" loading="lazy">
+              <div class="info-inner">
+                <div class="p-company">{{ p.name }}</div>
+                <div class="a-size">{{ p.description }}</div>
+              </div>
+            </div>
+            <div class="box-down">
+              <div class="price">Tsh. {{ p.price }}</div>
+              <a class="cart-link" href="{% url 'add-to-cart' p.id %}" aria-label="Add {{ p.name }} to cart">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                Add To Cart
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="no-results">No Search Found</div>
+  {% endif %}
+</div>
+
+<script>
+  {% if messages %}
+    {% for message in messages %}
+      alert('{{ message }}');
+    {% endfor %}
+  {% endif %}
+</script>
+
+<div style="height:60px;"></div>
+
+{% endblock content %}

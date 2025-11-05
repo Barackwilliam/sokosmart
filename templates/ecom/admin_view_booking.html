@@ -1,0 +1,102 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  body {
+    background-color: #007bff; /* Bootstrap primary blue */
+    color: white;
+  }
+
+  h6.panel-title {
+    text-align: center;
+    font-weight: 600;
+    padding: 1rem 0;
+  }
+
+  .container {
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .table thead th {
+    background-color: #dc3545; /* Bootstrap danger */
+    color: white;
+  }
+
+  .table tbody tr:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+  }
+
+  .product-img {
+    max-width: 40px;
+    max-height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 576px) {
+    .container {
+      margin: 1rem;
+    }
+
+    .table-responsive {
+      font-size: 0.9rem;
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="card shadow">
+    <div class="card-header bg-danger text-white">
+      <h6 class="panel-title mb-0">Total Orders</h6>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered align-middle" id="dev-table">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Contact</th>
+            <th>Shipping Address</th>
+            <th>Product</th>
+            <th>Image</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product, customer, order in data %}
+          <tr>
+            {% for c in customer %}
+            <td>{{ c.get_name }}</td>
+            <td>{{ c.mobile }}</td>
+            <td>{{ order.address }}</td>
+            {% endfor %}
+            {% for p in product %}
+            <td>{{ p.name }}</td>
+            <td><img src="{{ p.product_image}}" alt="{{ p.name }}" class="product-img" /></td>
+            <td>{{ order.status }}</td>
+            <td>
+              <a class="btn btn-primary btn-sm" href="{% url 'update-order' order.id %}" aria-label="Edit order {{ order.id }}">
+                <i>Edit</i>
+              </a>
+              <a class="btn btn-danger btn-sm" href="{% url 'delete-order' order.id %}" aria-label="Delete order {{ order.id }}">
+                <i>Delete</i>
+              </a>
+            </td>
+            {% endfor %}
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-white py-4">
+              <h5 style="color: black;">No Orders Available</h5>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

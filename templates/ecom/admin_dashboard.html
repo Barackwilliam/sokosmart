@@ -1,0 +1,90 @@
+{% extends 'ecom/admin_base.html' %}
+{% load static %}
+{% block content %}
+<br>
+{% include 'ecom/admin_dashboard_cards.html' %}
+<br><br>
+
+<hr><hr>
+
+<style>
+  /* Reduce padding and font size on small screens */
+  @media (max-width: 576px) {
+    #dev-table th, #dev-table td {
+      padding: 0.3rem 0.4rem;
+      font-size: 0.85rem;
+    }
+
+    /* Hide Shipment Address and Image columns on small screens */
+    #dev-table th:nth-child(3),
+    #dev-table td:nth-child(3),
+    #dev-table th:nth-child(5),
+    #dev-table td:nth-child(5) {
+      display: none;
+    }
+
+    /* Make badges smaller */
+    #dev-table .badge {
+      font-size: 0.75rem;
+      padding: 0.25em 0.4em;
+    }
+
+    /* Make images smaller */
+    #dev-table img.img-thumbnail {
+      max-width: 30px !important;
+      max-height: 30px !important;
+    }
+  }
+</style>
+
+<div class="container">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header text-center bg-danger text-white">
+      <h6 class="mb-0">Recent Booking</h6>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered align-middle" id="dev-table">
+        <thead class="table-dark">
+          <tr>
+            <th>Customer</th>
+            <th>Contact</th>
+            <th>Shipment Address</th>
+            <th>Product</th>
+            <th>Image</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product, customer, order in data %}
+          <tr>
+            {% for c in customer %}
+            <td>{{ c.get_name }}</td>
+            <td>{{ c.mobile }}</td>
+            <td>{{ order.address }}</td>
+            {% endfor %}
+            {% for p in product %}
+            <td>{{ p.name }}</td>
+            <td>
+              <img src="{{ p.product_image}}" alt="{{ p.name }}" class="img-thumbnail" style="max-width: 40px; max-height: 40px;" />
+            </td>
+            <td>
+              {% if order.status == 'Pending' %}
+              <span class="badge bg-info text-dark">{{ order.status }}</span>
+              {% elif order.status == 'Delivered' %}
+              <span class="badge bg-success">{{ order.status }}</span>
+              {% elif order.status == 'Out for Delivery' %}
+              <span class="badge bg-warning text-dark">{{ order.status }}</span>
+              {% else %}
+              <span class="badge bg-primary">{{ order.status }}</span>
+              {% endif %}
+            </td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

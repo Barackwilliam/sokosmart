@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <title>sokosmart.co.tz is a Tanzania’s Digital Marketplace</title>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <!-- Bootstrap 4.3.1 CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+  <style>
+    /* Base */
+    body {
+      padding-top: 70px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #3a4b8f, #1f2f60);
+      color: #f1f1f1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: linear-gradient(90deg, #1f2f60, #3a4b8f);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    }
+    .navbar-brand {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f1f1f1 !important;
+      letter-spacing: 1.2px;
+    }
+    .nav-link {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #cdd9ff !important;
+      transition: color 0.3s ease;
+    }
+    .nav-link:hover, .nav-link:focus {
+      color: #ffffff !important;
+      text-decoration: underline;
+    }
+    form button {
+      background: transparent;
+      border: none;
+      color: #cdd9ff;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      transition: color 0.3s ease;
+    }
+    form button:hover, form button:focus {
+      color: #ffffff;
+      text-decoration: underline;
+      outline: none;
+    }
+
+    /* Main content: full width-ish */
+    main.content-wrapper {
+      flex: 1;
+      width: 100%;
+      margin: 20px 0;
+      padding: 30px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      color: #f1f1f1;
+      backdrop-filter: blur(10px);
+      /* remove fixed max-width so it stretches */
+      max-width: none;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #1f2f60;
+      color: #cdd9ff;
+      padding: 25px 0;
+      text-align: center;
+      box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.05);
+      margin-top: auto;
+    }
+    footer p {
+      margin: 0.5rem 0 0 0;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    /* Social icons (optional if re-enabled) */
+    .fa {
+      font-size: 26px;
+      width: 50px;
+      height: 50px;
+      line-height: 50px;
+      text-align: center;
+      margin: 0 8px;
+      border-radius: 50%;
+      color: #f1f1f1;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      display: inline-block;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    .fa-facebook { background: #3b5998; }
+    .fa-whatsapp { background: #25d366; }
+    .fa-twitter { background: #55acee; }
+    .fa-instagram { background: #e4405f; }
+    .fa:hover, .fa:focus {
+      opacity: 0.85;
+      background-color: rgba(255, 255, 255, 0.25);
+      transform: scale(1.1);
+      text-decoration: none;
+      outline: none;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 992px) {
+      main.content-wrapper {
+        padding: 25px 15px;
+        border-radius: 10px;
+      }
+    }
+    @media (max-width: 576px) {
+      .fa {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 20px;
+        margin: 0 6px;
+      }
+      main.content-wrapper {
+        padding: 20px 12px;
+        margin: 15px 8px;
+      }
+      .navbar-brand {
+        font-size: 1.25rem;
+      }
+      .nav-link, form button {
+        font-size: 0.95rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav style="text-align: center;" class="navbar navbar-expand-md fixed-top">
+    <a href="/" class="navbar-brand">SokosmArt</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+      aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+      <div class="navbar-nav">
+        <a href="/view-customer" class="nav-item nav-link">Customer</a>
+        <a href="/admin-view-booking" class="nav-item nav-link">View Orders</a>
+        <a href="/admin-products" class="nav-item nav-link">Manage Products</a>
+      </div>
+
+      <div class="navbar-nav">
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" aria-label="Logout">Logout</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  <main class="content-wrapper">
+    {% block content %}
+    <!-- Your page content goes here -->
+    {% endblock content %}
+  </main>
+
+  <footer>
+    <p>© 2025 SokosmArt Tanzania’s Digital Marketplace</p>
+  </footer>
+
+  <!-- Bootstrap and dependencies -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,0 +1,220 @@
+{% extends 'ecom/customer_base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  :root {
+    --bg: linear-gradient(135deg,#0f1e38 0%,#1f2f58 80%);
+    --card-bg: rgba(31,47,88,.95);
+    --radius: 14px;
+    --accent: #ff7a29;
+    --accent-hover: #e06622;
+    --text: #e8ebf7;
+    --muted: #8fa3bf;
+    --shadow: 0 30px 60px -10px rgba(15,30,56,.5);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 16px 40px;
+  }
+
+  .heading {
+    text-align: center;
+    font-size: 1.75rem;
+    margin-bottom: 24px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 30px;
+  }
+
+  .product-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-start;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .product-row img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .product-info {
+    flex: 1;
+  }
+  .product-info strong {
+    color: #fff;
+  }
+  .product-info p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .order-details {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  /* Tracking Steps */
+  .tracking {
+    margin-top: 20px;
+    position: relative;
+    padding-top: 40px;
+  }
+  .tracking-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+  .step {
+    text-align: center;
+    flex: 1;
+    position: relative;
+  }
+  .step .icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 16px;
+    position: relative;
+    z-index: 1;
+  }
+  .step.active .icon {
+    background: var(--accent);
+    color: #fff;
+  }
+  .step .text {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .step.active .text {
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* Progressive line background */
+  .progress-line-bg {
+    position: absolute;
+    top: 59px;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    z-index: 0;
+  }
+  /* Progressive line fill */
+  .progress-line-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  .download-btn {
+    background: crimson;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  .download-btn:hover {
+    background: darkred;
+  }
+</style>
+
+<div class="container">
+  <div class="heading">My Orders / Tracking</div>
+
+  {% for products, order in data %}
+  <div class="card">
+    {% for product in products %}
+    <div class="product-row">
+      <img src="{{ product.product_image }}" alt="{{ product.name }}">
+      <div class="product-info">
+        <strong>{{ product.name }}</strong>
+        <p>{{ product.description }}</p>
+        <p>Price: Tsh. {{ product.price }}</p>
+      </div>
+      <div class="order-details">
+        <div><strong>Address:</strong> {{ order.address }}</div>
+        <div><strong>Status:</strong> {{ order.status }}</div>
+        <a href="{% url 'download-invoice' order.id product.id %}" class="download-btn">Download Invoice</a>
+      </div>
+    </div>
+    {% endfor %}
+
+    <!-- Tracking Section -->
+    <div class="tracking">
+      <div class="progress-line-bg">
+        {% if order.status == 'Pending' %}
+          <div class="progress-line-fill" style="width:0%;"></div>
+        {% elif order.status == 'Order Confirmed' %}
+          <div class="progress-line-fill" style="width:33%;"></div>
+        {% elif order.status == 'Out for Delivery' %}
+          <div class="progress-line-fill" style="width:66%;"></div>
+        {% elif order.status == 'Delivered' %}
+          <div class="progress-line-fill" style="width:100%;"></div>
+        {% else %}
+          <div class="progress-line-fill" style="width:0%;"></div>
+        {% endif %}
+      </div>
+
+      <div class="tracking-steps">
+        <div class="step {% if order.status in 'Pending Order Confirmed Out for Delivery Delivered' %}active{% endif %}">
+          <div class="icon"><i class="fa fa-spinner"></i></div>
+          <div class="text">Order Pending</div>
+        </div>
+        <div class="step {% if order.status in 'Order Confirmed Out for Delivery Delivered' %}active{% endif %}">
+          <div class="icon"><i class="fa fa-check"></i></div>
+          <div class="text">Order Confirmed</div>
+        </div>
+        <div class="step {% if order.status in 'Out for Delivery Delivered' %}active{% endif %}">
+          <div class="icon"><i class="fa fa-truck"></i></div>
+          <div class="text">On the Way</div>
+        </div>
+        <div class="step {% if order.status == 'Delivered' %}active{% endif %}">
+          <div class="icon"><i class="fa fa-home"></i></div>
+          <div class="text">Delivered</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock content %}

@@ -1,0 +1,266 @@
+{% extends 'ecom/homebase.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  :root {
+    --bg: linear-gradient(135deg,#0f1e38 0%,#1f2f58 80%);
+    --card-bg: rgba(31,47,88,.95);
+    --radius: 14px;
+    --accent: #ff7a29;
+    --accent-hover: #e06622;
+    --text: #e8ebf7;
+    --muted: #8fa3bf;
+    --shadow: 0 30px 60px -10px rgba(15,30,56,.5);
+    --transition: .35s cubic-bezier(.4,.2,.2,1);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Inter", system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 16px 40px;
+  }
+
+  .cart-heading {
+    text-align: center;
+    font-size: 1.75rem;
+    margin-bottom: 16px;
+    font-weight: 600;
+    color: #fff;
+  }
+
+  .panel {
+    background: var(--card-bg);
+    border: none;
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    overflow: visible;
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    margin-bottom: 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: transparent;
+    color: var(--text);
+  }
+
+  thead {
+    background: rgba(255,255,255,.05);
+  }
+
+  th {
+    padding: 12px 14px;
+    font-weight: 600;
+    font-size: 13px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(8px);
+  }
+
+  td {
+    padding: 12px 14px;
+    vertical-align: middle;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 14px;
+  }
+
+  .product-img {
+    max-width: 60px;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .action-btn {
+    background: #d9534f;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background var(--transition);
+    text-decoration: none;
+  }
+  .action-btn:hover {
+    background: #c43f3f;
+    text-decoration: none;
+    color: #fff;
+  }
+
+  .totals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 24px;
+  }
+  .total-badge {
+    background: rgba(255,255,255,.08);
+    padding: 14px 22px;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    min-width: 220px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+  }
+  .purchase-btn {
+    background: var(--accent);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #fff;
+    transition: background .25s;
+    min-width: 220px;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
+  }
+  .purchase-btn:hover {
+    background: var(--accent-hover);
+  }
+
+  .btn-wrapper {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 8px;
+  }
+
+  .no-products {
+    background: rgba(255,255,255,.08);
+    padding: 60px 20px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffd7d7;
+    margin: 40px auto;
+    max-width: 700px;
+  }
+
+  @media (max-width: 992px) {
+    thead {
+      display: none;
+    }
+    tr {
+      display: block;
+      margin-bottom: 16px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+    td {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 8px 10px;
+      position: relative;
+    }
+    td:before {
+      content: attr(data-label);
+      flex-basis: 100%;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #cfd8ff;
+      font-size: 12px;
+    }
+    .totals {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .total-badge, .purchase-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<div class="container" aria-label="Shopping cart">
+  <div class="cart-heading">My Cart</div>
+
+  <div class="panel" role="region" aria-label="Cart items">
+    {% if products %}
+      <div class="table-responsive">
+        <table aria-label="Cart table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Image</th>
+              <th scope="col">Price</th>
+              <th scope="col">Description</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in products %}
+              {% if p %}
+                <tr>
+                  <td data-label="Name">{{ p.name }}</td>
+                  <td data-label="Image">
+                    <img class="product-img" src="{{ p.product_image }}" alt="{{ p.name }}" loading="lazy" />
+                  </td>
+                  <td data-label="Price">Tsh. {{ p.price }}</td>
+                  <td data-label="Description">{{ p.description }}</td>
+                  <td data-label="Action">
+                    <a class="action-btn" href="{% url 'remove-from-cart' p.id %}" aria-label="Remove {{ p.name }} from cart">
+                      <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                      <span>Remove</span>
+                    </a>
+                  </td>
+                </tr>
+              {% else %}
+                <tr>
+                  <td colspan="5" style="text-align:center;">No products</td>
+                </tr>
+              {% endif %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="totals" aria-label="Cart summary">
+        <div class="total-badge" aria-label="Total amount">Total Tsh. {{ total }}</div>
+        <div>
+          <a href="/customer-address" class="purchase-btn" aria-label="Proceed to purchase">Purchase</a>
+        </div>
+      </div>
+    {% else %}
+      <div class="no-products">Your cart is empty. First add products to cart.</div>
+    {% endif %}
+  </div>
+</div>
+
+<div style="height:60px;"></div>
+
+{% endblock content %}

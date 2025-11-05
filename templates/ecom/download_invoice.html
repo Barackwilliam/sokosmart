@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="utf-8" />
+  <title>Invoice | SokosmArt Marketing Management System</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <style>
+    /* PDF page setup */
+    @page {
+      size: A4 portrait;
+      margin: 1.2cm;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      background: #f0f4f9;
+      color: #2e3440;
+      -webkit-print-color-adjust: exact;
+    }
+    .invoice {
+      max-width: 840px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px 28px 32px;
+      box-shadow: 0 25px 50px -12px rgba(31,47,88,.15);
+      position: relative;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .flex {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .justify-between {
+      justify-content: space-between;
+    }
+    .align-center {
+      align-items: center;
+    }
+    .header {
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      flex: 1 1 260px;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 0.5px;
+      color: #1f2f47;
+    }
+    .brand small {
+      display: block;
+      margin-top: 4px;
+      font-size: 11px;
+      color: #6c7a99;
+    }
+    .meta {
+      flex: 1 1 220px;
+      text-align: right;
+      font-size: 12px;
+    }
+    .meta .label {
+      font-weight: 600;
+      color: #555;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      background: linear-gradient(135deg,#ff7a29 0%,#d35d00 90%);
+      color: #fff;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 6px;
+    }
+
+    .section {
+      margin-bottom: 22px;
+    }
+    .box {
+      background: #f7f9fc;
+      border-radius: 8px;
+      padding: 14px 16px;
+      flex: 1 1 240px;
+      min-width: 220px;
+      box-sizing: border-box;
+    }
+    .box-title {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #6c7a99;
+    }
+    .box-content div {
+      margin-bottom: 6px;
+      word-break: break-word;
+    }
+    .items {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 4px;
+      font-size: 12px;
+    }
+    .items th, .items td {
+      padding: 12px 14px;
+      border: 1px solid #e2e8f0;
+    }
+    .items thead {
+      background: #eef3f9;
+    }
+    .items th {
+      text-align: left;
+      font-weight: 600;
+    }
+    .product-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .product-img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #cfd8ec;
+      flex-shrink: 0;
+    }
+    .totals {
+      margin-top: 12px;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .totals .line {
+      display: flex;
+      justify-content: space-between;
+      width: 260px;
+      font-size: 12px;
+    }
+    .totals .line.total {
+      font-size: 16px;
+      font-weight: 700;
+      border-top: 2px solid #e2e8f0;
+      padding-top: 6px;
+    }
+
+    /* Progress bar */
+    .progress-wrapper {
+      position: relative;
+      margin: 28px 0 8px;
+    }
+    .progress-labels {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      padding: 0 12px;
+      gap: 6px;
+    }
+    .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      font-size: 10px;
+    }
+    .circle {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #e6ecf5;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      color: #6c7a99;
+      position: relative;
+      z-index: 2;
+    }
+    .step.active .circle {
+      background: #ff7a29;
+      color: #fff;
+    }
+    .step .label {
+      margin-top: 6px;
+      display: block;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #555;
+    }
+    .step.active .label {
+      color: #1f2f47;
+    }
+    .bar-bg {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      top: 13px;
+      height: 6px;
+      background: #e6ecf5;
+      border-radius: 3px;
+      z-index: 1;
+    }
+    .bar-fill {
+      position: absolute;
+      left: 10px;
+      top: 13px;
+      height: 6px;
+      background: #ff7a29;
+      border-radius: 3px;
+      z-index: 1;
+      transition: width .4s ease;
+    }
+
+    .footer {
+      margin-top: 28px;
+      font-size: 11px;
+      text-align: center;
+      color: #6c7a99;
+      line-height:1.3;
+    }
+    .strong {
+      font-weight: 600;
+    }
+
+    /* print adjustments */
+    @media print {
+      body { background: none; }
+      .invoice { box-shadow: none; border-radius: 6px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="invoice" role="document" aria-label="Invoice">
+    <!-- Header -->
+    <div class="flex header justify-between">
+      <div class="brand">
+        <h1>Invoice</h1>
+        <small>SokosmArt Marketing Management System</small>
+        <small>Developed by JamiiTek</small>
+      </div>
+      <div class="meta">
+        <div><span class="label">Invoice #:</span> <strong>{{ orderId }}</strong></div>
+        <div><span class="label">Date:</span> <strong>{{ orderDate }}</strong></div>
+        <div><span class="label">Status:</span>
+          {% if orderStatus == 'Pending' %}
+            <span class="badge">Pending</span>
+          {% elif orderStatus == 'Order Confirmed' %}
+            <span class="badge">Confirmed</span>
+          {% elif orderStatus == 'Out for Delivery' %}
+            <span class="badge">Out for Delivery</span>
+          {% elif orderStatus == 'Delivered' %}
+            <span class="badge">Delivered</span>
+          {% else %}
+            <span class="badge">{{ orderStatus }}</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer & Shipping -->
+    <div class="flex section">
+      <div class="box">
+        <div class="box-title">Customer Information</div>
+        <div class="box-content">
+          <div><strong>Name:</strong> {{ customerName }}</div>
+          <div><strong>Email:</strong> {{ customerEmail }}</div>
+        </div>
+      </div>
+      <div class="box">
+        <div class="box-title">Shipping Details</div>
+        <div class="box-content">
+          <div><strong>Mobile:</strong> {{ customerMobile }}</div>
+          <div><strong>Address:</strong> {{ shipmentAddress }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-wrapper" aria-label="Order progress">
+      <div class="bar-bg"></div>
+      <div class="bar-fill"
+        style="
+          {% if orderStatus == 'Pending' %}
+            width:12%;
+          {% elif orderStatus == 'Order Confirmed' %}
+            width:38%;
+          {% elif orderStatus == 'Out for Delivery' %}
+            width:72%;
+          {% elif orderStatus == 'Delivered' %}
+            width:100%;
+          {% else %}
+            width:0%;
+          {% endif %}
+        "></div>
+      <div class="progress-labels">
+        <div class="step {% if orderStatus in 'Pending Order Confirmed Out for Delivery Delivered' %}active{% endif %}">
+          <div class="circle">1</div>
+          <div class="label">Pending</div>
+        </div>
+        <div class="step {% if orderStatus in 'Order Confirmed Out for Delivery Delivered' %}active{% endif %}">
+          <div class="circle">2</div>
+          <div class="label">Confirmed</div>
+        </div>
+        <div class="step {% if orderStatus in 'Out for Delivery Delivered' %}active{% endif %}">
+          <div class="circle">3</div>
+          <div class="label">On the Way</div>
+        </div>
+        <div class="step {% if orderStatus == 'Delivered' %}active{% endif %}">
+          <div class="circle">4</div>
+          <div class="label">Delivered</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Items -->
+    <div class="section">
+      <div class="box" style="flex:1 1 100%; padding:8px 12px;">
+        <div class="box-title" style="margin-bottom:8px;">Items Purchased</div>
+        <table class="items" aria-label="Invoice items">
+          <thead>
+            <tr>
+              <th style="width:35%;">Product</th>
+              <th>Description</th>
+              <th style="width:12%;">Unit Price</th>
+              <th style="width:10%;">Qty</th>
+              <th style="text-align:right; width:15%;">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+              <tr>
+                <td>
+                  <div class="product-name">
+                    {% if product.product_image.url %}
+                      <img class="product-img" src="{{ product.product_image.url }}" alt="{{ product.name }}">
+                    {% endif %}
+                    <div>{{ product.name }}</div>
+                  </div>
+                </td>
+                <td>{{ product.description }}</td>
+                <td>Tsh. {{ product.price|floatformat:2 }}</td>
+                <td>1</td>
+                <td style="text-align:right;">Tsh. {{ product.price|floatformat:2 }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- Totals -->
+        <div class="totals">
+          <div class="line">
+            <div>Subtotal:</div>
+            <div>Tsh. {{ subtotal|floatformat:2 }}</div>
+          </div>
+          {% if tax %}
+          <div class="line">
+            <div>Tax:</div>
+            <div>Tsh. {{ tax|floatformat:2 }}</div>
+          </div>
+          {% endif %}
+          {% if shipping_cost %}
+          <div class="line">
+            <div>Shipping:</div>
+            <div>Tsh. {{ shipping_cost|floatformat:2 }}</div>
+          </div>
+          {% endif %}
+          <div class="line total">
+            <div>Total:</div>
+            <div>Tsh. {{ total|floatformat:2 }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>This invoice is generated by SokosmArt. Thank you for your purchase.</div>
+      <div class="small">If you have questions, contact support or your account representative.</div>
+    </div>
+  </div>
+</body>
+</html>
