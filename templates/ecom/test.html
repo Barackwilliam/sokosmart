@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mfuko | Tanzania's Premier Online Marketplace</title>
+    <meta name="description" content="Mfuko - Tanzania's #1 online marketplace. Buy and sell products with trusted sellers across Tanzania. Fast, secure, and reliable.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1A5276;
+            --secondary: #F1C40F;
+            --accent: #E74C3C;
+            --light: #F8F9FA;
+            --dark: #2C3E50;
+            --success: #27AE60;
+            --warning: #F39C12;
+            --danger: #E74C3C;
+            --gray: #95A5A6;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar {
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .top-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .language-selector select {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 5px;
+        }
+
+        .language-selector option {
+            color: var(--dark);
+        }
+
+        .main-header {
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--secondary);
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid var(--gray);
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(26, 82, 118, 0.2);
+        }
+
+        .search-bar button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 7px 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .search-bar button:hover {
+            background: var(--secondary);
+            color: var(--dark);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .header-action i {
+            font-size: 22px;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .header-action span {
+            font-size: 12px;
+            color: var(--dark);
+        }
+
+        .header-action:hover {
+            color: var(--secondary);
+        }
+
+        .cart-count {
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: var(--primary);
+            padding: 12px 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(26, 82, 118, 0.8), rgba(26, 82, 118, 0.9)), url('https://images.unsplash.com/photo-1562967915-92ae0c320858?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 42px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: var(--secondary);
+            color: var(--dark);
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: var(--transition);
+            border: 2px solid var(--secondary);
+        }
+
+        .cta-button:hover {
+            background: transparent;
+            color: var(--secondary);
+        }
+
+        /* Categories Section */
+        .section-title {
+            font-size: 28px;
+            margin: 40px 0 20px;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--secondary);
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .category-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-icon {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .category-card h3 {
+            font-size: 16px;
+            color: var(--dark);
+        }
+
+        /* Products Section */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--accent);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .product-image {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--dark);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .product-seller {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .seller-avatar {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #144260;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Trending Section */
+        .trending-section {
+            background: white;
+            padding: 40px 0;
+            margin: 40px 0;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--secondary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--secondary);
+            color: var(--dark);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+            
+            .search-bar {
+                order: 3;
+                margin: 15px 0 0;
+                max-width: 100%;
+            }
+            
+            .hero h2 {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--primary);
+                padding: 20px;
+                box-shadow: var(--shadow);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .hero {
+                padding: 60px 0;
+            }
+            
+            .hero h2 {
+                font-size: 30px;
+            }
+            
+            .categories {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 576px) {
+            .header-actions {
+                gap: 10px;
+            }
+            
+            .header-action span {
+                display: none;
+            }
+            
+            .hero h2 {
+                font-size: 24px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-content">
+                <div>Karibu! Welcome to Tanzania's #1 Online Marketplace</div>
+                <div class="language-selector">
+                    <select>
+                        <option value="en">English</option>
+                        <option value="sw">Kiswahili</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="main-header">
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-shopping-bag" style="font-size: 32px; color: var(--primary);"></i>
+                        <h1>Mfuko<span>Market</span></h1>
+                    </div>
+                    
+                    <div class="search-bar">
+                        <input type="text" placeholder="Tafuta bidhaa yako hapa...">
+                        <button><i class="fas fa-search"></i> Tafuta</button>
+                    </div>
+                    
+                    <div class="header-actions">
+                        <div class="header-action">
+                            <i class="fas fa-user"></i>
+                            <span>Akaunti</span>
+                        </div>
+                        <div class="header-action">
+                            <i class="fas fa-heart"></i>
+                            <span>Penda</span>
+                        </div>
+                        <div class="header-action" style="position: relative;">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Mkokoteni</span>
+                            <div class="cart-count">3</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <nav>
+            <div class="container">
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-links">
+                    <li><a href="#"><i class="fas fa-home"></i> Nyumbani</a></li>
+                    <li><a href="#"><i class="fas fa-th-large"></i> Kategoria Zote</a></li>
+                    <li><a href="#"><i class="fas fa-fire"></i> Inavutia Sana</a></li>
+                    <li><a href="#"><i class="fas fa-store"></i> Maduka</a></li>
+                    <li><a href="#"><i class="fas fa-bullhorn"></i> Tangaza Bidhaa</a></li>
+                    <li><a href="#"><i class="fas fa-headset"></i> Msaada</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Furahia Ununuzi wa Mtandaoni Tanzania</h2>
+            <p>Jiunge na wauzaji na wanunuzi wengi zaidi nchini. Pata bidhaa bora kwa bei nafuu na uzoefu salama wa ununuzi.</p>
+            <a href="#" class="cta-button">Anza Kuuza Sasa <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Categories Section -->
+        <h2 class="section-title">Kategoria Kuu</h2>
+        <div class="categories">
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Simu & Tablet</h3>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-laptop"></i>
+                </div>
+                <h3>Kompyuta & Vifaa</h3>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-tshirt"></i>
+                </div>
+                <h3>Mavazi</h3>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h3>Nyumba & Ofisi</h3>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h3>Magari & Vifaa</h3>
+            </div>
+            <div class="category-card">
+                <div class="category-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3>Chakula & Mapishi</h3>
+            </div>
+        </div>
+
+        <!-- Sponsored Products -->
+        <h2 class="section-title">Bidhaa Zilizotangazwa</h2>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-badge">Imetangazwa</div>
+                <img src="https://images.unsplash.com/photo-1556656793-08538906a9f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Product" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Samsung Galaxy S23 Ultra - 256GB</h3>
+                    <div class="product-price">TZS 1,850,000</div>
+                    <div class="product-seller">
+                        <div class="seller-avatar">JM</div>
+                        <span>Juma Mobile</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> Weka kwenye Cart</button>
+                        <button class="btn btn-outline"><i class="fas fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-badge">Imetangazwa</div>
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Product" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Nike Air Max 270 - Sneakers</h3>
+                    <div class="product-price">TZS 250,000</div>
+                    <div class="product-seller">
+                        <div class="seller-avatar">SM</div>
+                        <span>Shoe Masters</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> Weka kwenye Cart</button>
+                        <button class="btn btn-outline"><i class="fas fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-badge">Imetangazwa</div>
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Product" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Wireless Bluetooth Headphones - Noise Cancelling</h3>
+                    <div class="product-price">TZS 120,000</div>
+                    <div class="product-seller">
+                        <div class="seller-avatar">ES</div>
+                        <span>Electro Store</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> Weka kwenye Cart</button>
+                        <button class="btn btn-outline"><i class="fas fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-badge">Imetangazwa</div>
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1999&q=80" alt="Product" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-title">Smart Watch Series 7 - Fitness Tracker</h3>
+                    <div class="product-price">TZS 350,000</div>
+                    <div class="product-seller">
+                        <div class="seller-avatar">GT</div>
+                        <span>Gadget Tanzania</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> Weka kwenye Cart</button>
+                        <button class="btn btn-outline"><i class="fas fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Products -->
+        <div class="trending-section">
+            <h2 class="section-title">Bidhaa Zinazovuma Sasa</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1560769629-975ec94e6a86?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80" alt="Product" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">Kitenge Dress - African Print</h3>
+                        <div class="product-price">TZS 75,000</div>
+                        <div class="product-seller">
+                            <div class="seller-avatar">FM</div>
+                            <span>Fashion Mrembo</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> Weka kwenye Cart</button>
+                            <button class="btn btn-outline"><i class="fas fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1585386959984-a4155224a1ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Product" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">Toyota RAV4 - 2018 Model</h3>
+                        <div class="product-price">TZS 42,500,000</div>
+                        <div class="product-seller">
+                            <div class="seller-avatar">AM</div>
+                            <span>Auto Masters</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> Weka kwenye Cart</button>
+                            <button class="btn btn-outline"><i class="fas fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1553456558-aff63285bdd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Product" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">Gas Cooker - 4 Burners</h3>
+                        <div class="product-price">TZS 320,000</div>
+                        <div class="product-seller">
+                            <div class="seller-avatar">HS</div>
+                            <span>Home Solutions</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> Weka kwenye Cart</button>
+                            <button class="btn btn-outline"><i class="fas fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1978&q=80" alt="Product" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">PlayStation 5 Console - 825GB</h3>
+                        <div class="product-price">TZS 1,200,000</div>
+                        <div class="product-seller">
+                            <div class="seller-avatar">GS</div>
+                            <span>Game Store TZ</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn btn-primary"><i class="fas fa-cart-plus"></i> Weka kwenye Cart</button>
+                            <button class="btn btn-outline"><i class="fas fa-heart"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Kuhusu MfukoMarket</h3>
+                    <p>MfukoMarket ni duka la mtandaoni namba 1 Tanzania. Tunaunganisha wauzaji na wanunuzi kwa urahisi na usalama.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Menyu ya Haraka</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Nyumbani</a></li>
+                        <li><a href="#">Kuhusu Sisi</a></li>
+                        <li><a href="#">Bidhaa</a></li>
+                        <li><a href="#">Maduka</a></li>
+                        <li><a href="#">Wasiliana Nasi</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Msaada wa Mteja</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Maswali Yanayoulizwa Sana</a></li>
+                        <li><a href="#">Maelekezo ya Ununuzi</a></li>
+                        <li><a href="#">Maelekezo ya Uuzaji</a></li>
+                        <li><a href="#">Sera ya Faragha</a></li>
+                        <li><a href="#">Vigezo na Masharti</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Wasiliana Nasi</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Sokoine Drive, Dar es Salaam</li>
+                        <li><i class="fas fa-phone"></i> +255 689 123 456</li>
+                        <li><i class="fas fa-envelope"></i> info@mfukomarket.co.tz</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 MfukoMarket. Haki zote zimehifadhiwa. | Tovuti imetengenezwa na Watanzania kwa Watanzania</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // Simple cart functionality
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', function() {
+                const countElement = document.querySelector('.cart-count');
+                let count = parseInt(countElement.textContent);
+                count++;
+                countElement.textContent = count;
+                
+                // Show a simple notification
+                alert('Bidhaa imewekwa kwenye mkokoteni wako!');
+            });
+        });
+    </script>
+</body>
+</html>

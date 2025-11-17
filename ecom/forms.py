@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django import forms
 from .models import Customer, Product
 
-UPLOADCARE_PUBLIC_KEY = '76122001cca4add87f02'  # Badilisha kama una key nyingine
+UPLOADCARE_PUBLIC_KEY = '5ff964c3b9a85a1e2697' 
 
 from . import models
 

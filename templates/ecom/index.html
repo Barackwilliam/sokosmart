@@ -116,6 +116,8 @@
   }
 
   /* ========== PRODUCTS SECTION ========== */
+  <style>
+  /* ========== PRODUCTS SECTION STYLES ========== */
   .products-section {
     padding: 2rem 5%;
     background: var(--surface);
@@ -134,11 +136,13 @@
     box-shadow: var(--shadow-sm);
     transition: var(--transition);
     position: relative;
+    display: flex;
+    flex-direction: column;
   }
 
   .product-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
   }
 
   .product-badge {
@@ -156,54 +160,127 @@
 
   .product-img-container {
     width: 100%;
-    height: 180px;
+    height: 180px; /* Fixed height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05); /* Subtle background */
+    border-radius: var(--radius) var(--radius) 0 0; /* Rounded top corners */
     overflow: hidden;
+    position: relative;
   }
 
   .product-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    max-width: 90%; /* Prevents overflow */
+    max-height: 90%;
+    object-fit: contain; /* Maintains aspect ratio */
     transition: var(--transition);
   }
 
+  /* Fallback for broken images */
+  .product-img[src*="placeholder"] {
+    opacity: 0.7;
+    width: 50%; /* Smaller placeholder */
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .product-img-container {
+      height: 150px;
+    }
+  }
   .product-card:hover .product-img {
     transform: scale(1.05);
   }
 
   .product-info {
     padding: 1rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
   }
 
   .product-title {
     font-weight: 600;
     font-size: 0.95rem;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
     color: var(--text);
+  }
+
+  .product-description {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+    flex-grow: 1;
+  }
+
+  .product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
   }
 
   .product-price {
     font-weight: 700;
     color: var(--accent);
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .add-to-cart {
     background: var(--accent);
     color: white;
     border: none;
-    padding: 0.5rem;
-    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
     cursor: pointer;
     font-size: 0.8rem;
-    width: 100%;
-    margin-top: 0.8rem;
     transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .add-to-cart:hover {
     background: var(--accent-dark);
   }
+
+  /* ========== RESPONSIVE ADJUSTMENTS ========== */
+  @media (max-width: 768px) {
+    .products-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .product-img-container {
+      height: 150px;
+    }
+
+    .product-footer {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .add-to-cart {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .products-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .product-title {
+      font-size: 0.85rem;
+    }
+
+    .product-description {
+      font-size: 0.75rem;
+    }
+  }
+
 
   /* ========== RESPONSIVE ========== */
   @media (max-width: 768px) {
@@ -245,11 +322,130 @@
       grid-template-columns: 1fr 1fr;
     }
   }
+
+
+
+  
+  /* ====== POPUP STYLES ====== */
+.cart-popup {
+  position: fixed;
+  top: 30px;
+  right: -400px;
+  background: var(--accent);
+  color: var(--text);
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  z-index: 9999;
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.cart-popup.show {
+  right: 30px;
+  opacity: 1;
+}
+
+.cart-popup i {
+  color: var(--card);
+  font-size: 1.5rem;
+}
+
+.cart-popup h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.cart-popup p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--surface);
+}
+
+
+
+
+.no-results {
+  min-height: 60vh; /* inafaa kwa centering */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  background: linear-gradient(135deg, #f9fafb, #f1f5f9);
+  border-radius: 12px;
+  margin: 0 auto;
+  max-width: 900px;
+}
+
+.no-results i {
+  font-size: clamp(3rem, 6vw, 5rem);
+  color: #ff6b6b;
+  margin-bottom: 20px;
+}
+
+.no-results h1 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.no-results p {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: #666;
+  max-width: 600px;
+  margin-bottom: 25px;
+}
+
+.back-btn {
+  display: inline-block;
+  background-color: #ff6b6b;
+  color: white;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #e65a5a;
+  transform: translateY(-2px);
+}
 </style>
+
+      <!-- ====== POPUP SUCCESS ====== -->
+<div id="cartPopup" class="cart-popup">
+  <div class="cart-popup-content">
+    <i class="fas fa-check-circle"></i>
+    <h4>Product Added to cart Successful</h4>
+    <p>View cart to Purchase.</p>
+  </div>
+</div>
+
+
+    {% if not products %}
+    <div class="no-results">
+        <i class="fa-solid fa-magnifying-glass"></i> 
+        <h1>No Products Found</h1>
+        <p>We couldn't find any matches for your search. Try using different keywords or browse our shop.</p>
+        <a href="/" class="back-btn">Browse Products</a>
+      </div> 
+
+      {% endif %}
+
 
 <!-- ========== CATEGORIES SECTION ========== -->
 <section class="categories-section">
+  {% if categories %}
   <h2 class="section-title">Shop By Categories</h2>
+  {% endif %}
   <div class="categories-container" id="categoriesContainer">
     {% for category in categories %}
     <div class="category-card">
@@ -265,7 +461,6 @@
 
 <!-- ========== PRODUCTS SECTION ========== -->
 <section class="products-section">
-  <h2 class="section-title">Featured Products</h2>
   <div class="products-grid">
     {% for product in products %}
     <div class="product-card">
@@ -273,13 +468,16 @@
       <span class="product-badge">-{{ product.discount }}%</span>
       {% endif %}
       <div class="product-img-container">
-        <img src="{{ product.product_image }}" alt="{{ product.name }}" class="product-img">
-      </div>
+  <img src="{{ product.product_image }}" alt="{{ product.name }}" class="product-img" onerror="this.src='{% static 'images/placeholder.png' %}'">
+   </div>
       <div class="product-info">
         <h3 class="product-title">{{ product.name }}</h3>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <p class="product-description">{{ product.description|truncatechars:80 }}</p>
+        <div class="product-footer">
           <span class="product-price">Tsh. {{ product.price }}</span>
-          <button class="add-to-cart" onclick="window.location.href='{% url 'add-to-cart' product.id %}'">Add to Cart</button>
+          <button class="add-to-cart" onclick="window.location.href='{% url 'add-to-cart' product.id %}'">
+            <i class="fas fa-shopping-cart"></i> Add
+          </button>
         </div>
       </div>
     </div>
@@ -346,5 +544,33 @@
     });
   });
 </script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const popup = document.getElementById("cartPopup");
+
+  // Handle Add-to-Cart buttons
+  document.querySelectorAll(".add-to-cart").forEach(btn => {
+    btn.addEventListener("click", function (event) {
+      event.preventDefault(); // prevent immediate page reload
+
+      // Show popup
+      popup.classList.add("show");
+
+      // Hide after 3s
+      setTimeout(() => {
+        popup.classList.remove("show");
+      }, 6000);
+
+      // Go to cart adding URL after small delay
+      setTimeout(() => {
+        window.location.href = btn.getAttribute("onclick").match(/'(.*?)'/)[1];
+      }, 500);
+    });
+  });
+});
+</script>
+
 
 {% endblock content %}

@@ -15,7 +15,7 @@ class CategoryAdmin(admin.ModelAdmin):
         if db_field.name == 'category_image':
             formfield.widget.attrs.update({
                 'role': 'uploadcare-uploader',
-                'data-public-key': '76122001cca4add87f02',
+                'data-public-key': '5ff964c3b9a85a1e2697',
             })
         return formfield
 
@@ -36,7 +36,7 @@ class CustomerAdmin(admin.ModelAdmin):
         if db_field.name == 'profile_pic':
             formfield.widget.attrs.update({
                 'role': 'uploadcare-uploader',
-                'data-public-key': '76122001cca4add87f02',
+                'data-public-key': '5ff964c3b9a85a1e2697',
             })
         return formfield
 
@@ -58,7 +58,7 @@ class ProductAdmin(admin.ModelAdmin):
         if db_field.name == 'product_image':
             formfield.widget.attrs.update({
                 'role': 'uploadcare-uploader',
-                'data-public-key': '76122001cca4add87f02',
+                'data-public-key': '5ff964c3b9a85a1e2697',
             })
         return formfield
 

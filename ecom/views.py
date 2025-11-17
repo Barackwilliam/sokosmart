@@ -42,39 +42,105 @@ def adminclick_view(request):
         return HttpResponseRedirect('afterlogin')
     return HttpResponseRedirect('adminlogin')
 
+from django.contrib import messages
+from django.contrib.auth.models import User, Group  # 👈 IMPORTANT: Add User import
+from django.shortcuts import render, redirect
+from . import forms
+from . import models
 
 def customer_signup_view(request):
-    userForm=forms.CustomerUserForm()
-    customerForm=forms.CustomerForm()
-    mydict={'userForm':userForm,'customerForm':customerForm}
-    if request.method=='POST':
-        userForm=forms.CustomerUserForm(request.POST)
-        customerForm=forms.CustomerForm(request.POST,request.FILES)
-        if userForm.is_valid() and customerForm.is_valid():
-            user=userForm.save()
-            user.set_password(user.password)
-            user.save()
-            customer=customerForm.save(commit=False)
-            customer.user=user
-            customer.save()
-            my_customer_group = Group.objects.get_or_create(name='CUSTOMER')
-            my_customer_group[0].user_set.add(user)
-        return HttpResponseRedirect('customerlogin')
-    return render(request,'ecom/customersignup.html',context=mydict)
-
-#-----------for checking user iscustomer
-def is_customer(user):
-    return user.groups.filter(name='CUSTOMER').exists()
-
-
+    if request.method == 'POST':
+        # Get data directly from request
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        mobile = request.POST.get('mobile')
+        address = request.POST.get('address')
+        profile_pic = request.FILES.get('profile_pic')
+        
+        print(f"=== DEBUG ===")
+        print(f"First Name: {first_name}")
+        print(f"Last Name: {last_name}")
+        print(f"Username: {username}")
+        print(f"Password: {password}")
+        print(f"Mobile: {mobile}")
+        print(f"Address: {address}")
+        
+        # Basic validation
+        if not all([first_name, last_name, username, password, mobile, address]):
+            messages.error(request, 'Please fill in all required fields.')
+        else:
+            try:
+                # Check if username exists
+                if User.objects.filter(username=username).exists():
+                    messages.error(request, 'Username already exists. Please choose a different one.')
+                else:
+                    # Create user
+                    user = User.objects.create_user(
+                        username=username,
+                        password=password,
+                        first_name=first_name,
+                        last_name=last_name
+                    )
+                    print(f"✅ User created: {user.username}")
+                    
+                    # Create customer profile
+                    customer = models.Customer(
+                        user=user,
+                        mobile=mobile,
+                        address=address
+                    )
+                    
+                    # Add profile picture if provided
+                    if profile_pic:
+                        customer.profile_pic = profile_pic
+                    
+                    customer.save()
+                    print(f"✅ Customer profile created for: {user.username}")
+                    
+                    # Add to CUSTOMER group
+                    customer_group, created = Group.objects.get_or_create(name='CUSTOMER')
+                    customer_group.user_set.add(user)
+                    print(f"✅ User added to CUSTOMER group: {user.username}")
+                    
+                    messages.success(request, '🎉 Account created successfully! Please login with your credentials.')
+                    return redirect('customerlogin')
+                    
+            except Exception as e:
+                print(f"❌ Error creating account: {str(e)}")
+                messages.error(request, f'Error creating account: {str(e)}')
+    
+    # Return forms for GET request
+    userForm = forms.CustomerUserForm()
+    customerForm = forms.CustomerForm()
+    
+    return render(request, 'ecom/customersignup.html', {
+        'userForm': userForm,
+        'customerForm': customerForm
+    })
 
 #---------AFTER ENTERING CREDENTIALS WE CHECK WHETHER USERNAME AND PASSWORD IS OF ADMIN,CUSTOMER
+# def afterlogin_view(request):
+#     if is_customer(request.user):
+#         return redirect('customer-home')
+#     else:
+#         return redirect('admin-dashboard')
 def afterlogin_view(request):
-    if is_customer(request.user):
-        return redirect('customer-home')
-    else:
-        return redirect('admin-dashboard')
-
+    """
+    Redirect users after login based on their groups
+    """
+    try:
+        if request.user.groups.filter(name='CUSTOMER').exists():
+            return redirect('customer-home')
+        elif request.user.groups.filter(name='ADMIN').exists():
+            return redirect('admin-dashboard')
+        else:
+            # Default redirect for users without specific groups
+            return redirect('customer-home')
+    except Exception as e:
+        print(f"Login redirect error: {e}")
+        return redirect('customer-home')  # Fallback redirect
 #---------------------------------------------------------------------------------
 #------------------------ ADMIN RELATED VIEWS START ------------------------------
 #---------------------------------------------------------------------------------
@@ -343,8 +409,8 @@ def send_feedback_view(request):
 #---------------------------------------------------------------------------------
 #------------------------ CUSTOMER RELATED VIEWS START ------------------------------
 #---------------------------------------------------------------------------------
-@login_required(login_url='customerlogin')
-@user_passes_test(is_customer)
+# @login_required(login_url='customerlogin')
+# @user_passes_test(is_customer)
 def customer_home_view(request):
     products=models.Product.objects.all()
     if 'product_ids' in request.COOKIES:
@@ -358,7 +424,7 @@ def customer_home_view(request):
 
 
 # shipment address before placing order
-@login_required(login_url='customerlogin')
+# @login_required(login_url='customerlogin')
 def customer_address_view(request):
     # this is for checking whether product is present in cart or not
     # if there is no product in cart we will not show address form
@@ -407,37 +473,108 @@ def customer_address_view(request):
 
 # here we are just directing to this view...actually we have to check whther payment is successful or not
 #then only this view should be accessed
-@login_required(login_url='customerlogin')
+
+# @login_required(login_url='customerlogin')
+# def payment_success_view(request):
+#     # after that we will delete cookies because after order placed...cart should be empty
+#     customer=models.Customer.objects.get(user_id=request.user.id)
+#     products=None
+#     email=None
+#     mobile=None
+#     address=None
+#     if 'product_ids' in request.COOKIES:
+#         product_ids = request.COOKIES['product_ids']
+#         if product_ids != "":
+#             product_id_in_cart=product_ids.split('|')
+#             products=models.Product.objects.all().filter(id__in = product_id_in_cart)
+#             # Here we get products list that will be ordered by one customer at a time
+
+#     # these things can be change so accessing at the time of order...
+#     if 'email' in request.COOKIES:
+#         email=request.COOKIES['email']
+#     if 'mobile' in request.COOKIES:
+#         mobile=request.COOKIES['mobile']
+#     if 'address' in request.COOKIES:
+#         address=request.COOKIES['address']
+
+#     # here we are placing number of orders as much there is a products
+#     # suppose if we have 5 items in cart and we place order....so 5 rows will be created in orders table
+#     # there will be lot of redundant data in orders table...but its become more complicated if we normalize it
+#     for product in products:
+#         models.Orders.objects.get_or_create(customer=customer,product=product,status='Pending',email=email,mobile=mobile,address=address)
+
+#     # after order placed cookies should be deleted
+#     response = render(request,'ecom/payment_success.html')
+#     response.delete_cookie('product_ids')
+#     response.delete_cookie('email')
+#     response.delete_cookie('mobile')
+#     response.delete_cookie('address')
+#     return response
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.core.exceptions import ObjectDoesNotExist
+
 def payment_success_view(request):
-    # after that we will delete cookies because after order placed...cart should be empty
-    customer=models.Customer.objects.get(user_id=request.user.id)
-    products=None
-    email=None
-    mobile=None
-    address=None
+    # Check if user is authenticated
+    if request.user.is_authenticated:
+        try:
+            customer = models.Customer.objects.get(user_id=request.user.id)
+        except models.Customer.DoesNotExist:
+            # Handle case where Customer profile doesn't exist
+            customer = None
+            messages.warning(request, "Customer profile not found. Please update your profile.")
+    else:
+        # Guest user - no customer profile
+        customer = None
+    
+    products = None
+    email = None
+    mobile = None
+    address = None
+    
+    # Get order data from cookies
     if 'product_ids' in request.COOKIES:
         product_ids = request.COOKIES['product_ids']
         if product_ids != "":
-            product_id_in_cart=product_ids.split('|')
-            products=models.Product.objects.all().filter(id__in = product_id_in_cart)
-            # Here we get products list that will be ordered by one customer at a time
+            product_id_in_cart = product_ids.split('|')
+            products = models.Product.objects.all().filter(id__in=product_id_in_cart)
 
-    # these things can be change so accessing at the time of order...
     if 'email' in request.COOKIES:
-        email=request.COOKIES['email']
+        email = request.COOKIES['email']
     if 'mobile' in request.COOKIES:
-        mobile=request.COOKIES['mobile']
+        mobile = request.COOKIES['mobile']
     if 'address' in request.COOKIES:
-        address=request.COOKIES['address']
+        address = request.COOKIES['address']
 
-    # here we are placing number of orders as much there is a products
-    # suppose if we have 5 items in cart and we place order....so 5 rows will be created in orders table
-    # there will be lot of redundant data in orders table...but its become more complicated if we normalize it
-    for product in products:
-        models.Orders.objects.get_or_create(customer=customer,product=product,status='Pending',email=email,mobile=mobile,address=address)
+    # Create orders
+    if products:
+        for product in products:
+            if request.user.is_authenticated and customer:
+                # For logged in users with customer profile
+                models.Orders.objects.get_or_create(
+                    customer=customer,
+                    product=product,
+                    status='Pending',
+                    email=email,
+                    mobile=mobile,
+                    address=address
+                )
+            else:
+                # For guest users or users without customer profile
+                models.Orders.objects.create(
+                    product=product,
+                    status='Pending',
+                    email=email,
+                    mobile=mobile,
+                    address=address,
+                    is_guest_order=True
+                )
 
-    # after order placed cookies should be deleted
-    response = render(request,'ecom/payment_success.html')
+    # Clear cookies after order placement
+    response = render(request, 'ecom/payment_success.html')
     response.delete_cookie('product_ids')
     response.delete_cookie('email')
     response.delete_cookie('mobile')
@@ -445,22 +582,51 @@ def payment_success_view(request):
     return response
 
 
-
-
-@login_required(login_url='customerlogin')
-@user_passes_test(is_customer)
-def my_order_view(request):
+# @login_required(login_url='customerlogin')
+# @user_passes_test(is_customer)
+# def my_order_view(request):
     
-    customer=models.Customer.objects.get(user_id=request.user.id)
-    orders=models.Orders.objects.all().filter(customer_id = customer)
-    ordered_products=[]
-    for order in orders:
-        ordered_product=models.Product.objects.all().filter(id=order.product.id)
-        ordered_products.append(ordered_product)
+#     customer=models.Customer.objects.get(user_id=request.user.id)
+#     orders=models.Orders.objects.all().filter(customer_id = customer)
+#     ordered_products=[]
+#     for order in orders:
+#         ordered_product=models.Product.objects.all().filter(id=order.product.id)
+#         ordered_products.append(ordered_product)
 
-    return render(request,'ecom/my_order.html',{'data':zip(ordered_products,orders)})
+#     return render(request,'ecom/my_order.html',{'data':zip(ordered_products,orders)})
  
+# @login_required(login_url='customerlogin')
+# @user_passes_test(is_customer)
+def my_order_view(request):
+    try:
+        customer = models.Customer.objects.get(user_id=request.user.id)
+        
+        # Get orders by customer ID (logged in orders)
+        customer_orders = models.Orders.objects.filter(customer_id=customer)
+        
+        # Also get guest orders by email (if any)
+        guest_orders = models.Orders.objects.filter(
+            email=request.user.email, 
+            customer_id__isnull=True
+        )
+        
+        # Combine both querysets
+        all_orders = customer_orders | guest_orders
+        all_orders = all_orders.order_by('-id')  # Sort by latest first
+        
+        ordered_products = []
+        for order in all_orders:
+            ordered_product = models.Product.objects.filter(id=order.product.id)
+            ordered_products.append(ordered_product)
 
+        return render(request, 'ecom/my_order.html', {
+            'data': zip(ordered_products, all_orders),
+            'has_orders': all_orders.exists()
+        })
+    
+    except models.Customer.DoesNotExist:
+        messages.error(request, "Please complete your customer profile to view orders.")
+        return render(request, 'ecom/my_order.html', {'data': [], 'has_orders': False})
 
 
 # @login_required(login_url='customerlogin')
@@ -496,7 +662,7 @@ def render_to_pdf(template_src, context_dict):
     return
 
 @login_required(login_url='customerlogin')
-@user_passes_test(is_customer)
+# @user_passes_test(is_customer)
 def download_invoice_view(request,orderID,productID):
     order=models.Orders.objects.get(id=orderID)
     product=models.Product.objects.get(id=productID)
@@ -523,14 +689,14 @@ def download_invoice_view(request,orderID,productID):
 
 
 @login_required(login_url='customerlogin')
-@user_passes_test(is_customer)
+# @user_passes_test(is_customer)
 def my_profile_view(request):
     customer=models.Customer.objects.get(user_id=request.user.id)
     return render(request,'ecom/my_profile.html',{'customer':customer})
 
 
 @login_required(login_url='customerlogin')
-@user_passes_test(is_customer)
+# @user_passes_test(is_customer)
 def edit_profile_view(request):
     customer=models.Customer.objects.get(user_id=request.user.id)
     user=models.User.objects.get(id=customer.user_id)

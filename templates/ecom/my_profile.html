@@ -180,10 +180,10 @@
   <div style="background-color: #41479c;" class="profile-card" role="region" aria-labelledby="profile-heading">
     <div class="profile-photo" aria-label="Profile picture">
       {% if customer.profile_pic %}
-        <img src="{{ customer.profile_pic }}" alt="Profile picture of {{ request.user }}">
+        <img src="{{ customer.profile_pic.url }}" alt="Profile picture of {{ request.user.get_full_name }}">
       {% else %}
         <div aria-hidden="true" style="width:140px;height:140px;border-radius:50%;background:#d9e2f5;display:flex;align-items:center;justify-content:center;font-size:48px;color:#556877;">
-          {{ request.user|first|upper }}
+          {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
         </div>
       {% endif %}
     </div>
@@ -192,7 +192,7 @@
       <div class="info-row">
         <div class="info-block">
           <div style="color: white;" class="info-label">Username</div>
-          <div style="color: white;"  class="info-value">{{ request.user }}</div>
+          <div style="color: white;" class="info-value">{{ request.user.username }}</div>
         </div>
         <div class="info-block">
           <div style="color: white;"  class="info-label">Address</div>

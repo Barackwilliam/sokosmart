@@ -2,26 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>SokosmArt is a Tanzania’s Digital Marketplace</title>
+  <title>SokosmArt - Tanzania's Digital Marketplace</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Swiper CSS -->
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
-/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 
-<!-- Swiper JS -->
-<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 
   {% load static %}
   <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- FontAwesome 6 -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -36,48 +32,84 @@
       --shadow: 0 20px 40px -10px rgba(15,30,56,.35);
       --transition: .35s cubic-bezier(.4,.2,.2,1);
     }
-    * { box-sizing:border-box; }
-    body {
-      background: var(--bg-gradient);
-      color: var(--text);
-      font-family: 'Inter', system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    
+    * { 
+      box-sizing: border-box; 
       margin: 0;
       padding: 0;
-      min-height: 100%;
     }
-    a { text-decoration:none; }
-    .container-max { max-width: 1200px; margin:0 auto; padding:0 16px; }
+    
+    html {
+      height: 100%;
+    }
+    
+    body {
+      background: var(--bg-gradient);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    a { 
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .container-max { 
+      max-width: 1200px; 
+      margin: 0 auto; 
+      padding: 0 16px;
+      width: 100%;
+    }
 
-    /* Navbar */
+    /* Navbar - Improved Mobile Responsiveness */
     .navbar-custom {
       background: var(--surface);
-      padding: .5rem 1rem;
+      padding: .75rem 1rem;
       position: sticky;
-      top:0;
-      z-index: 100;
+      top: 0;
+      z-index: 1000;
       border-bottom: 1px solid rgba(255,255,255,0.05);
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      gap: .75rem;
+      gap: 1rem;
+      backdrop-filter: blur(10px);
     }
+    
     .brand {
       font-weight: 700;
-      font-size: 1.25rem;
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
       color: #fff;
-      margin-right: 1rem;
+      white-space: nowrap;
     }
-    .brand span { color: var(--accent); }
+    
+    .brand span { 
+      color: var(--accent); 
+    }
+    
+    /* Desktop Navigation */
+    .nav-desktop {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+    
     .nav-links {
       display: flex;
-      gap: 1rem;
+      gap: .5rem;
       align-items: center;
-      flex-wrap: wrap;
-      list-style:none;
-      padding:0;
-      margin:0;
+      list-style: none;
+      padding: 0;
+      margin: 0;
     }
-    .nav-links a, .nav-links form button {
+    
+    .nav-links a, 
+    .nav-links form button {
       color: #cdd4ec;
       font-weight: 500;
       background: none;
@@ -87,21 +119,26 @@
       cursor: pointer;
       font-size: .85rem;
       position: relative;
+      white-space: nowrap;
     }
-    .nav-links a:hover, .nav-links a.active, .nav-links form button:hover {
+    
+    .nav-links a:hover, 
+    .nav-links a.active, 
+    .nav-links form button:hover {
       color: #fff;
       background: rgba(255,255,255,0.05);
     }
+    
     .search-wrapper {
       position: relative;
-      flex:1;
-      min-width: 200px;
+      flex: 1;
+      min-width: min(100%, 300px);
       max-width: 500px;
-      margin: 5px 0;
     }
+    
     .search-input {
       width: 100%;
-      padding: .55rem 1.25rem .55rem 2.5rem;
+      padding: .6rem 1.25rem .6rem 2.5rem;
       border-radius: 999px;
       border: none;
       background: rgba(255,255,255,0.08);
@@ -110,53 +147,77 @@
       outline: none;
       transition: var(--transition);
     }
-    .search-input::placeholder { color: rgba(255,255,255,0.6); }
+    
+    .search-input:focus {
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 0 0 2px rgba(255,122,41,0.3);
+    }
+    
+    .search-input::placeholder { 
+      color: rgba(255,255,255,0.6); 
+    }
+    
     .search-icon {
-      position:absolute;
-      left:12px;
-      top:50%;
-      transform:translateY(-50%);
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
       color: rgba(255,255,255,0.75);
       font-size: .9rem;
-      pointer-events:none;
+      pointer-events: none;
     }
+    
     .btn-accent {
       background: var(--accent);
       border: none;
       color: #fff;
-      padding: .55rem 1rem;
+      padding: .6rem 1.25rem;
       border-radius: 999px;
       font-weight: 600;
       font-size: .85rem;
       cursor: pointer;
       transition: background .25s;
+      white-space: nowrap;
     }
-    .btn-accent:hover { background: var(--accent-dark); }
+    
+    .btn-accent:hover { 
+      background: var(--accent-dark); 
+      transform: translateY(-1px);
+    }
+    
     .cart-btn {
       position: relative;
       background: rgba(255,255,255,0.08);
       border: none;
       color: #fff;
-      padding: .55rem .9rem;
+      padding: .6rem 1rem;
       border-radius: 999px;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-size: .85rem;
-      cursor:pointer;
-      font-weight:500;
+      cursor: pointer;
+      font-weight: 500;
       transition: background var(--transition);
+      white-space: nowrap;
     }
-    .cart-btn:hover { background: rgba(255,255,255,0.15); }
+    
+    .cart-btn:hover { 
+      background: rgba(255,255,255,0.15); 
+    }
+    
     .cart-badge {
       background: #ff4d4f;
       border-radius: 50%;
       padding: 3px 7px;
       font-size: 10px;
       font-weight: 700;
-      margin-left:4px;
-      display:inline-block;
+      margin-left: 4px;
+      display: inline-block;
+      min-width: 18px;
+      text-align: center;
     }
+    
     .menu-toggle {
       background: none;
       border: none;
@@ -164,78 +225,203 @@
       font-size: 1.25rem;
       display: none;
       cursor: pointer;
+      padding: .5rem;
+      border-radius: 6px;
+    }
+    
+    .menu-toggle:hover {
+      background: rgba(255,255,255,0.05);
     }
 
-.swiper-slide {
-  background-color: #f0f4f8; /* soft light background */
-  border-radius: 12px;
-  padding: 10px 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.swiper-slide:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-}
-
-.category-slide {
-  text-decoration: none;
-  color: #2c3e50;
-  font-weight: 600;
-  text-align: center;
-  width: 100%;
-}
-
-.category-thumb img {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid transparent;
-  transition: border-color 0.3s ease;
-}
-
-.swiper-slide:hover .category-thumb img,
-.category-slide.active .category-thumb img {
-  border-color: #3fcd7f; /* highlight border */
-}
-
-.a-size {
-  margin-top: 10px;
-  font-size: 1rem;
-  color: #34495e;
-}
-
-.swiper-button-next,
-.swiper-button-prev {
-  color: #3fcd7f;
-  top: 40%;
-  width: 30px;
-  height: 30px;
-}
-
-
-
-    @media (max-width: 992px) {
-      .menu-toggle { display:inline-block; }
-      .nav-collapse {
-        width: 100%;
-        display: none;
-        flex-direction: column;
-        gap: .75rem;
-        margin-top: 8px;
-      }
-      .nav-collapse.show { display:flex; }
-      .search-wrapper { order:3; }
+    /* Mobile Header Actions (Cart + Menu) */
+    .mobile-header-actions {
+      display: none;
+      align-items: center;
+      gap: .5rem;
+      margin-left: auto;
     }
 
-    /* Main content */
-    .container-inner { padding: 90px 16px 40px; }
+    /* Mobile Sidebar */
+    .mobile-sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 85%;
+      max-width: 320px;
+      height: 100vh;
+      background: var(--surface);
+      z-index: 1100;
+      padding: 1.5rem;
+      overflow-y: auto;
+      transition: left 0.3s ease;
+      box-shadow: 2px 0 20px rgba(0,0,0,0.3);
+    }
+    
+    .mobile-sidebar.active {
+      left: 0;
+    }
+    
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .sidebar-brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #fff;
+    }
+    
+    .sidebar-brand span {
+      color: var(--accent);
+    }
+    
+    .close-sidebar {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: .5rem;
+      border-radius: 6px;
+    }
+    
+    .close-sidebar:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+    
+    .sidebar-nav a,
+    .sidebar-nav form button {
+      color: #cdd4ec;
+      font-weight: 500;
+      background: none;
+      border: none;
+      padding: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      font-size: .95rem;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      transition: var(--transition);
+    }
+    
+    .sidebar-nav a:hover,
+    .sidebar-nav form button:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.05);
+    }
+    
+    .sidebar-nav i {
+      width: 20px;
+      text-align: center;
+    }
+    
+    .sidebar-search {
+      margin: 1.5rem 0;
+    }
+    
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1050;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Main Content - Highly Flexible */
+    .container-inner { 
+      padding: clamp(80px, 8vw, 100px) 16px 40px;
+      flex: 1;
+      width: 100%;
+    }
+    
+    .content-wrapper {
+      min-height: 60vh;
+      width: 100%;
+    }
+
+    /* Swiper Improvements */
+    .swiper-slide {
+      background-color: #f0f4f8;
+      border-radius: 12px;
+      padding: 12px 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: auto;
+    }
+
+    .swiper-slide:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    }
+
+    .category-slide {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: 600;
+      text-align: center;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .category-thumb img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+
+    .swiper-slide:hover .category-thumb img,
+    .category-slide.active .category-thumb img {
+      border-color: #3fcd7f;
+    }
+
+    .a-size {
+      margin-top: 0;
+      font-size: .9rem;
+      color: #34495e;
+      line-height: 1.3;
+    }
+
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: #3fcd7f;
+      top: 40%;
+      width: 30px;
+      height: 30px;
+    }
 
     /* Footer */
     .footer {
@@ -243,116 +429,396 @@
       padding: 40px 16px;
       color: #fff;
       font-size: .9rem;
-      margin-top: 60px;
+      margin-top: auto;
     }
-    .footer a { color: rgba(255,255,255,0.8); text-decoration:none; }
-    .footer a:hover { color:#fff; }
-    .footer .title { font-weight:600; margin-bottom:12px; }
-    .small-text { font-size:.75rem; color: rgba(255,255,255,0.6); }
-    .footer .social a { margin-right:12px; font-size:1rem; }
-  </style>
-  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+    
+    .footer a { 
+      color: rgba(255,255,255,0.8); 
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+    
+    .footer a:hover { 
+      color: #fff; 
+    }
+    
+    .footer .title { 
+      font-weight: 600; 
+      margin-bottom: 12px; 
+      font-size: 1rem;
+    }
+    
+    .small-text { 
+      font-size: .75rem; 
+      color: rgba(255,255,255,0.6); 
+    }
+    
+    .footer .social a { 
+      margin-right: 12px; 
+      font-size: 1rem; 
+      display: inline-block;
+    }
 
+    /* Alert Messages */
+    .alert-container {
+      position: fixed;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1050;
+      width: 90%;
+      max-width: 500px;
+    }
+    
+    .alert {
+      border-radius: var(--radius);
+      border: none;
+      box-shadow: var(--shadow);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .container-max {
+        padding: 0 20px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .navbar-custom {
+        padding: .5rem 1rem;
+      }
+      
+      .nav-desktop {
+        display: none;
+      }
+      
+      .mobile-header-actions {
+        display: flex;
+      }
+      
+      .menu-toggle { 
+        display: inline-block; 
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container-inner {
+        padding: 70px 12px 30px;
+      }
+      
+      .footer {
+        padding: 30px 16px;
+      }
+      
+      .footer .row {
+        gap: 2rem 0;
+      }
+      
+      .brand {
+        font-size: 1.2rem;
+      }
+      
+      .mobile-sidebar {
+        width: 90%;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .navbar-custom {
+        padding: .5rem .75rem;
+        gap: .5rem;
+      }
+      
+      .container-max {
+        padding: 0 12px;
+      }
+      
+      .container-inner {
+        padding: 65px 8px 25px;
+      }
+      
+      .btn-accent,
+      .cart-btn {
+        padding: .5rem .75rem;
+        font-size: .8rem;
+      }
+      
+      .search-input {
+        padding: .5rem 1rem .5rem 2.25rem;
+        font-size: .85rem;
+      }
+      
+      .search-icon {
+        left: 10px;
+        font-size: .85rem;
+      }
+      
+      .mobile-sidebar {
+        width: 95%;
+        padding: 1rem;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .brand {
+        font-size: 1.1rem;
+      }
+      
+      .sidebar-nav a,
+      .sidebar-nav form button {
+        font-size: .9rem;
+        padding: .75rem;
+      }
+    }
+
+    /* Utility Classes for Content */
+    .responsive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+      gap: 1.5rem;
+      width: 100%;
+    }
+    
+    .flex-responsive {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .card-responsive {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+    
+    .card-responsive:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(15,30,56,.4);
+    }
+
+    /* Loading State */
+    .loading-skeleton {
+      background: linear-gradient(90deg, #2a3a5a 25%, #314267 50%, #2a3a5a 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+      border-radius: var(--radius);
+    }
+    
+    @keyframes loading {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  </style>
 </head>
 
 <body>
 
+  <!-- Alert Messages -->
+  {% if messages %}
+  <div class="alert-container">
+    {% for message in messages %}
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-info-circle me-2"></i>
+          <span>{{ message }}</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   <!-- Navbar -->
   <nav class="navbar-custom">
-    <div class="container-max d-flex flex-wrap align-items-center gap-2">
-      <a href="/" class="brand"><span>SokosmArt</span> Tanzania</a>
+    <div class="container-max">
+      <div class="d-flex align-items-center w-100 justify-content-between">
+        <a href="/" class="brand">
+          <span>SokosmArt</span> Tanzania
+        </a>
 
-      <button class="menu-toggle ms-auto d-lg-none" id="navToggle" aria-label="Toggle menu">
-        <i class="fa-solid fa-bars"></i>
-      </button> 
+        <!-- Desktop Navigation -->
+        <div class="nav-desktop">
+          <ul class="nav-links">
+            {% if request.user.is_authenticated %}
+              <li><a href="/my-order" class="nav-link"><i class="fas fa-shopping-bag me-1"></i>My Orders</a></li>
+              <li><a href="/my-profile" class="nav-link"><i class="fas fa-user me-1"></i>Profile</a></li>
+              <li>
+                <form method="POST" action="{% url 'logout' %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="nav-link" aria-label="Logout">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                  </button>
+                </form>
+              </li>
+            {% else %}
+              <li><a href="/" class="nav-link"><i class="fas fa-home me-1"></i>Home</a></li>
+              <li><a href="/customerlogin" class="nav-link"><i class="fas fa-sign-in-alt me-1"></i>Login</a></li>
+              <li><a href="/customersignup" class="nav-link"><i class="fas fa-user-plus me-1"></i>Sign Up</a></li>
+              <li><a href="/aboutus" class="nav-link"><i class="fas fa-info-circle me-1"></i>About Us</a></li>
+            {% endif %}
+          </ul>
 
-       {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-info py-2 px-3">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
+          <div class="search-wrapper">
+            <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <form action="/search" method="get">
+              <input class="search-input" type="search" name="query" placeholder="Search for chicken, eggs or manure" aria-label="Search">
+            </form>
+          </div>
 
-      <div class="d-flex align-items-center flex-wrap gap-2 nav-collapse" id="navContent">
-        <ul class="nav-links mb-0 d-flex align-items-center gap-1">
-          {% if request.user.is_authenticated %}
-            <li><a href="/my-order" class="nav-link">My Orders</a></li>
-            <li><a href="/my-profile" class="nav-link">Profile</a></li>
-            <li>
-              <form method="POST" action="{% url 'logout' %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="nav-link" aria-label="Logout">Logout</button>
-              </form>
-            </li>
-          {% else %}
-            <li><a href="/" class="nav-link">Home</a></li>
-            <li><a href="/customerlogin" class="nav-link">Login</a></li>
-            <li><a href="/customersignup" class="nav-link">Sign Up</a></li>
-            <li><a href="/aboutus" class="nav-link">About Us</a></li>
-          {% endif %}
-        </ul>
-
-        <div class="search-wrapper flex-grow-1">
-          <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <form action="/search" method="get">
-            <input class="search-input" type="search" name="query" placeholder="Search for chicken, eggs or manure" aria-label="Search">
-          </form>
+          <div class="d-flex align-items-center gap-2">
+            <a href="/cart" class="cart-btn" aria-label="View cart">
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span>Cart</span>
+              <span class="cart-badge">{{ product_count_in_cart }}</span>
+            </a>
+            {% if not request.user.is_authenticated %}
+              <a href="/customerlogin" class="btn-accent">Get Started</a>
+            {% endif %}
+          </div>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
+        <!-- Mobile Header Actions (Cart + Menu) -->
+        <div class="mobile-header-actions">
           <a href="/cart" class="cart-btn" aria-label="View cart">
             <i class="fa-solid fa-cart-shopping"></i>
-            <span>Cart</span>
             <span class="cart-badge">{{ product_count_in_cart }}</span>
           </a>
-          {% if not request.user.is_authenticated %}
-            <a href="/customerlogin" class="btn-accent">Get Started</a>
-          {% endif %}
+          <button class="menu-toggle" id="navToggle" aria-label="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
         </div>
       </div>
     </div>
   </nav>
 
-  <!-- Main content placeholder -->
-  <main class="container-inner container-max">
-    {% block content %}{% endblock content %}
+  <!-- Mobile Sidebar -->
+  <div class="mobile-sidebar" id="mobileSidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <span>SokosmArt</span> Tanzania
+      </div>
+      <button class="close-sidebar" id="closeSidebar" aria-label="Close menu">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-search mb-3">
+      <div class="search-wrapper">
+        <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        <form action="/search" method="get">
+          <input class="search-input" type="search" name="query" placeholder="Search products..." aria-label="Search">
+        </form>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      {% if request.user.is_authenticated %}
+        <a href="/my-order">
+          <i class="fas fa-shopping-bag"></i>
+          My Orders
+        </a>
+        <a href="/my-profile">
+          <i class="fas fa-user"></i>
+          Profile
+        </a>
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" aria-label="Logout">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+          </button>
+        </form>
+      {% else %}
+        <a href="/">
+          <i class="fas fa-home"></i>
+          Home
+        </a>
+        <a href="/customerlogin">
+          <i class="fas fa-sign-in-alt"></i>
+          Login
+        </a>
+        <a href="/customersignup">
+          <i class="fas fa-user-plus"></i>
+          Sign Up
+        </a>
+        <a href="/aboutus">
+          <i class="fas fa-info-circle"></i>
+          About Us
+        </a>
+      {% endif %}
+      
+      {% if not request.user.is_authenticated %}
+        <a href="/customerlogin" class="btn-accent mt-2 text-center" style="justify-content: center;">
+          <i class="fas fa-rocket"></i>
+          Get Started
+        </a>
+      {% endif %}
+    </nav>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Main Content -->
+  <main class="container-inner">
+    <div class="content-wrapper">
+      {% block content %}
+      <!-- Default content if none provided -->
+      <div class="text-center py-5">
+        <div class="card-responsive">
+          <h1 class="mb-4">Welcome to SokosmArt</h1>
+          <p class="mb-4">Tanzania's Digital Marketplace</p>
+          <div class="responsive-grid mt-5">
+            <div class="card-responsive text-start">
+              <h3><i class="fas fa-store me-2"></i>Shop</h3>
+              <p>Browse our wide selection of products</p>
+            </div>
+            <div class="card-responsive text-start">
+              <h3><i class="fas fa-shipping-fast me-2"></i>Delivery</h3>
+              <p>Fast and reliable delivery services</p>
+            </div>
+            <div class="card-responsive text-start">
+              <h3><i class="fas fa-shield-alt me-2"></i>Secure</h3>
+              <p>Safe and secure transactions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endblock content %}
+    </div>
   </main>
 
   <!-- Footer -->
   <footer class="footer">
     <div class="container-max">
-      <div class="row">
-        <div class="col-md-4 mb-4">
-          <div class="title">SokosmArt – Tanzania’s Digital Marketplace</div>
-          <p>Building trustworthy commerce experiences. &copy; 2025. <a href="/adminclick"> Admin</a></p>
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6">
+          <div class="title">SokosmArt – Tanzania's Digital Marketplace</div>
+          <p>Building trustworthy commerce experiences. &copy; 2025. <a href="/adminclick">Admin</a></p>
           <div class="small-text">Mobile-first, performance optimized.</div>
         </div>
-        <!-- <div class="col-md-2 mb-4">
-          <div class="title">Company</div>
-          <ul class="list-unstyled">
-            <li><a href="/">Home</a></li>
-            <li><a href="/aboutus">About</a></li>
-            <li><a href="/my-order">Orders</a></li>
-          </ul>
+        <div class="col-lg-4 col-md-6">
+          <div class="title">Quick Links</div>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="/">Home</a>
+            <a href="/aboutus">About</a>
+            <a href="/my-order">Orders</a>
+            <a href="/contact">Contact</a>
+          </div>
         </div>
-        <div class="col-md-2 mb-4">
-          <div class="title">Support</div>
-          <ul class="list-unstyled">
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/help">Help Center</a></li>
-            <li><a href="/terms">Terms</a></li>
-          </ul>
-        </div> -->
-        <div class="col-md-4 mb-4">
+        <div class="col-lg-4">
           <div class="title">Stay Connected</div>
           <p>Subscribe for updates and offers.</p>
-          <form class="d-flex gap-2 mb-2" novalidate>
+          <form class="d-flex gap-2 mb-3" novalidate>
             <input type="email" placeholder="you@domain.com" class="form-control form-control-sm" style="border-radius:999px; background: rgba(255,255,255,0.08); border:none; color:#fff;" aria-label="Email">
             <button type="submit" class="btn-accent btn-sm" style="white-space:nowrap;">Subscribe</button>
           </form>
           <div class="social">
-            <a href="#" aria-label="Facebook" class="text-white me-2"><i class="fa-brands fa-facebook-f"></i></a>
-            <a href="#" aria-label="Instagram" class="text-white me-2"><i class="fa-brands fa-instagram"></i></a>
-            <a href="#" aria-label="Twitter" class="text-white me-2"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" aria-label="Facebook" class="text-white me-3"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" aria-label="Instagram" class="text-white me-3"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Twitter" class="text-white me-3"><i class="fa-brands fa-twitter"></i></a>
             <a href="#" aria-label="LinkedIn" class="text-white"><i class="fa-brands fa-linkedin-in"></i></a>
           </div>
         </div>
@@ -361,33 +827,100 @@
   </footer>
 
   <!-- Bootstrap bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-..." crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
   <script>
+    // Mobile Sidebar Functionality
     const navToggle = document.getElementById('navToggle');
-    const navContent = document.getElementById('navContent');
-    navToggle?.addEventListener('click', () => {
-      navContent.classList.toggle('show');
+    const closeSidebar = document.getElementById('closeSidebar');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+    const overlay = document.getElementById('overlay');
+
+    function openSidebar() {
+      mobileSidebar.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebarFunc() {
+      mobileSidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Event Listeners
+    if (navToggle) {
+      navToggle.addEventListener('click', openSidebar);
+    }
+
+    if (closeSidebar) {
+      closeSidebar.addEventListener('click', closeSidebarFunc);
+    }
+
+    if (overlay) {
+      overlay.addEventListener('click', closeSidebarFunc);
+    }
+
+    // Close sidebar when clicking on links
+    const sidebarLinks = document.querySelectorAll('.sidebar-nav a, .sidebar-nav button');
+    sidebarLinks.forEach(link => {
+      link.addEventListener('click', closeSidebarFunc);
+    });
+
+    // Close sidebar with Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileSidebar.classList.contains('active')) {
+        closeSidebarFunc();
+      }
+    });
+
+    // Auto-hide alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(alert => {
+        setTimeout(() => {
+          const bsAlert = new bootstrap.Alert(alert);
+          bsAlert.close();
+        }, 5000);
+      });
+    });
+
+    // Initialize Swiper
+    document.addEventListener('DOMContentLoaded', function() {
+      const swiperElements = document.querySelectorAll('.categories-swiper');
+      swiperElements.forEach(element => {
+        new Swiper(element, {
+          slidesPerView: 'auto',
+          spaceBetween: 15,
+          freeMode: true,
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          breakpoints: {
+            320: { slidesPerView: 2 },
+            480: { slidesPerView: 3 },
+            640: { slidesPerView: 4 },
+            768: { slidesPerView: 5 },
+            1024: { slidesPerView: 7 },
+            1200: { slidesPerView: 8 },
+          },
+        });
+      });
+    });
+
+    // Responsive image handling
+    document.addEventListener('DOMContentLoaded', function() {
+      const images = document.querySelectorAll('img');
+      images.forEach(img => {
+        img.addEventListener('load', function() {
+          this.style.opacity = '1';
+        });
+        img.style.opacity = '0';
+        img.style.transition = 'opacity 0.3s ease';
+      });
     });
   </script>
-
-  <script>
-  const swiper = new Swiper('.categories-swiper', {
-    slidesPerView: 'auto',
-    spaceBetween: 15,
-    freeMode: true,
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    breakpoints: {
-      320: { slidesPerView: 2 },
-      480: { slidesPerView: 3 },
-      640: { slidesPerView: 4 },
-      768: { slidesPerView: 6 },
-      1024: { slidesPerView: 8 },
-    },
-  });
-</script>
 
 </body>
 </html>

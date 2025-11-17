@@ -1,5 +1,8 @@
 
 
+
+
+
 # Kwa project zingine kama hizi au mifumo mbalimbali ya 
 # kusimamia biashara na shughuli zingine nitafute kwa mawasiliano haya
 # phone: 0629712678
@@ -7,10 +10,7 @@
 # Whatsaap: 0629712678
 
 import os
-import cloudinary
-import cloudinary_storage
 from pathlib import Path
-import django_heroku
 import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -35,10 +35,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ecom',
-    'cloudinary_storage',
-    'cloudinary',
+    'pyuploadcare.dj',
     'widget_tweaks',
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,8 +72,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'ecommerce.wsgi.application'
-
-# Database
 
 
 DATABASES = {
@@ -116,23 +116,22 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Media files (Cloudinary)
-cloudinary.config(
-    cloud_name='drc3xiipg', 
-    api_key='321181265585861', 
-    api_secret='KA2L_qJUCyBBZFcyeQDGzH1kfUo'  
-)
+
+
+# UPLOADCARE = {
+#     'pub_key': '7e9984d93874d32944be',
+#     'secret': 'ff3a2603eff6cca1b577',
+# }
+# UPLOADCARE_PUBLIC_KEY = '7e9984d93874d32944be'
 
 
 UPLOADCARE = {
-    'pub_key': '76122001cca4add87f02',
-    'secret': 'f00801b9b65172d50de5',
+    'pub_key': '5ff964c3b9a85a1e2697',
+    'secret': '3842ddaed74fa5026064',
 }
-UPLOADCARE_PUBLIC_KEY = '76122001cca4add87f02'
 
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-MEDIA_URL = 'https://res.cloudinary.com/drc3xiipg/'
+
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -145,8 +144,6 @@ EMAIL_RECEIVING_USER = ['to@gmail.com']  # Replace with the email where you rece
 
 LOGIN_REDIRECT_URL = '/afterlogin'
 
-# Heroku settings
-django_heroku.settings(locals())
 
 # Static files storage (for Heroku)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

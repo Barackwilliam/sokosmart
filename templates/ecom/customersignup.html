@@ -5,18 +5,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Customer Sign Up | SokosmArt Marketing Management System</title>
+  <title>Customer Sign Up | SokosmArt Tanzania</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
+    /* Your existing CSS here */
     :root {
       --bg: linear-gradient(135deg,#0f1e38 0%,#1f2f58 80%);
       --panel: rgba(31,47,88,.95);
       --radius: 14px;
       --accent: #ff7a29;
       --accent-hover: #e06622;
+      --success: #10b981;
+      --error: #ef4444;
       --fg: #e8ebf7;
       --muted: #8fa3bf;
       --shadow: 0 30px 60px -10px rgba(15,30,56,.5);
@@ -32,101 +35,112 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
 
     .login-wrapper {
       width: 100%;
       max-width: 500px;
-      padding: 1px;
-      border-radius: 16px;
+      padding: 2px;
+      border-radius: 20px;
       background: linear-gradient(135deg,#ff7a29,#6c63ff);
       box-shadow: var(--shadow);
-      margin: 16px;
     }
 
     .login-card {
       background: var(--panel);
-      border-radius: 14px;
-      padding: 36px 28px 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
+      border-radius: 18px;
+      padding: 40px 32px;
     }
 
     .login-card h1 {
-      font-size: 1.75rem;
+      font-size: 2rem;
       font-weight: 700;
       text-align: center;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ff7a29, #ff9f40);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .subtext {
-      text-align: center;
-      font-size: 0.85rem;
-      color: var(--muted);
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .field-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #cbd6f1;
+      display: block;
     }
 
     .form-control-custom {
       width: 100%;
-      padding: 12px 14px;
-      border-radius: 8px;
+      padding: 14px 16px;
+      border-radius: 10px;
       border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.07);
       color: #f0f4fb;
-      font-size: 14px;
+      font-size: 15px;
       outline: none;
       transition: var(--transition);
     }
+
     .form-control-custom:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(255,122,41,.3);
-      background: rgba(255,255,255,0.08);
+      box-shadow: 0 0 0 3px rgba(255,122,41,.2);
+      background: rgba(255,255,255,0.1);
     }
 
-    .field-label {
+    .error-message {
+      color: var(--error);
       font-size: 0.75rem;
-      font-weight: 600;
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #cbd6f1;
+      margin-top: 5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .alert-message {
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 0.9rem;
+    }
+
+    .alert-error {
+      background: rgba(239,68,68,0.1);
+      color: #ef4444;
+      border: 1px solid rgba(239,68,68,0.3);
+    }
+
+    .alert-success {
+      background: rgba(16,185,129,0.1);
+      color: #10b981;
+      border: 1px solid rgba(16,185,129,0.3);
     }
 
     .btn-primary-custom {
       background: var(--accent);
       border: none;
       color: #fff;
-      padding: 14px;
+      padding: 16px;
       font-size: 1rem;
       font-weight: 600;
-      border-radius: 999px;
+      border-radius: 12px;
       cursor: pointer;
       width: 100%;
-      transition: background .25s;
+      transition: all 0.3s ease;
+      margin-top: 10px;
     }
+
     .btn-primary-custom:hover {
       background: var(--accent-hover);
-    }
-
-    .note {
-      font-size: 0.75rem;
-      text-align: center;
-      color: var(--muted);
-    }
-
-    .signup-link {
-      text-align: center;
-      font-size: 0.85rem;
-      margin-top: 12px;
-    }
-    .signup-link a {
-      color: var(--accent);
-      font-weight: 600;
-      text-decoration: none;
-      transition: color .2s;
-    }
-    .signup-link a:hover {
-      color: var(--accent-hover);
-      text-decoration: underline;
+      transform: translateY(-2px);
     }
   </style>
 </head>
@@ -134,65 +148,130 @@
   <div class="login-wrapper">
     <div class="login-card">
       <div>
-        <h1>CUSTOMER SIGN UP</h1>
-        <div class="subtext">Fill the form below to create your account.</div>
+        <h1><i class="fas fa-user-plus"></i> Create Account</h1>
+        <div style="text-align: center; color: var(--muted); margin-bottom: 20px;">
+          Join SokosmArt Tanzania and start shopping today
+        </div>
       </div>
 
+      <!-- Display Messages -->
       {% if messages %}
         {% for message in messages %}
-          <div class="alert alert-info py-2 px-3">{{ message }}</div>
+          <div class="alert-message {% if message.tags == 'error' %}alert-error{% else %}alert-success{% endif %}">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% else %}check-circle{% endif %}"></i>
+            {{ message }}
+          </div>
         {% endfor %}
       {% endif %}
 
       <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 
-        <div class="mb-3">
+        <!-- User Form -->
+        <div class="form-group">
           <label class="field-label">First Name</label>
-          {% render_field userForm.first_name class="form-control-custom" placeholder="First Name" %}
+          {% render_field userForm.first_name class="form-control-custom" placeholder="Enter your first name" %}
+          {% if userForm.first_name.errors %}
+            {% for error in userForm.first_name.errors %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ error }}
+              </div>
+            {% endfor %}
+          {% endif %}
         </div>
 
-        <div class="mb-3">
+        <div class="form-group">
           <label class="field-label">Last Name</label>
-          {% render_field userForm.last_name class="form-control-custom" placeholder="Last Name" %}
+          {% render_field userForm.last_name class="form-control-custom" placeholder="Enter your last name" %}
+          {% if userForm.last_name.errors %}
+            {% for error in userForm.last_name.errors %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ error }}
+              </div>
+            {% endfor %}
+          {% endif %}
         </div>
 
-        <div class="mb-3">
+        <div class="form-group">
           <label class="field-label">Username</label>
-          {% render_field userForm.username class="form-control-custom" placeholder="Username" %}
+          {% render_field userForm.username class="form-control-custom" placeholder="Choose a username" %}
+          {% if userForm.username.errors %}
+            {% for error in userForm.username.errors %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ error }}
+              </div>
+            {% endfor %}
+          {% endif %}
         </div>
 
-        <div class="mb-3">
+        <div class="form-group">
           <label class="field-label">Password</label>
-          {% render_field userForm.password class="form-control-custom" placeholder="Password" type="password" %}
+          {% render_field userForm.password class="form-control-custom" placeholder="Create a password" type="password" %}
+          {% if userForm.password.errors %}
+            {% for error in userForm.password.errors %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ error }}
+              </div>
+            {% endfor %}
+          {% endif %}
         </div>
 
-        <div class="mb-3">
+        <!-- Customer Form -->
+        <div class="form-group">
+          <label class="field-label">Mobile Number</label>
+          {% render_field customerForm.mobile class="form-control-custom" placeholder="e.g., 0755123456" %}
+          {% if customerForm.mobile.errors %}
+            {% for error in customerForm.mobile.errors %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ error }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+        <div class="form-group">
           <label class="field-label">Address</label>
-          {% render_field customerForm.address class="form-control-custom" placeholder="Address" %}
+          {% render_field customerForm.address class="form-control-custom" placeholder="Your delivery address" %}
+          {% if customerForm.address.errors %}
+            {% for error in customerForm.address.errors %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ error }}
+              </div>
+            {% endfor %}
+          {% endif %}
         </div>
 
-        <div class="mb-3">
-          <label class="field-label">Mobile</label>
-          {% render_field customerForm.mobile class="form-control-custom" placeholder="Mobile" %}
-        </div>
-
-        <div class="mb-3">
-          <label class="field-label">Profile Picture</label>
+        <div class="form-group">
+          <label class="field-label">Profile Picture (Optional)</label>
           {% render_field customerForm.profile_pic class="form-control-custom" %}
+          {% if customerForm.profile_pic.errors %}
+            {% for error in customerForm.profile_pic.errors %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ error }}
+              </div>
+            {% endfor %}
+          {% endif %}
         </div>
 
-        <button type="submit" class="btn-primary-custom">Sign Up</button>
+        <button type="submit" class="btn-primary-custom">
+          <i class="fas fa-user-plus"></i> Create My Account
+        </button>
 
-        <div class="signup-link">
-          Already have an account? <a href="{% url 'customerlogin' %}">Log In</a>
+        <div style="text-align: center; margin-top: 20px; color: var(--muted);">
+          Already have an account? 
+          <a href="{% url 'customerlogin' %}" style="color: var(--accent); font-weight: 600; text-decoration: none;">
+            Log In Here
+          </a>
         </div>
-
-        <div class="note">We respect your privacy and security.</div>
       </form>
     </div>
   </div>
-  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
-
 </body>
 </html>

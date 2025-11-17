@@ -3,219 +3,603 @@
 {% block content %}
 <style>
   :root {
-    --panel-bg: rgba(31,47,88,.85);
-    --gradient-border: linear-gradient(135deg,#ff7a29,#6c63ff);
-    --radius: 16px;
-    --accent: #ff7a29;
-    --accent-hover: #e06622;
-    --fg: #e8ebf7;
-    --muted: #9bb3d1;
-    --shadow: 0 30px 60px -10px rgba(15,30,56,.5);
-    --transition: .25s cubic-bezier(.4,.2,.2,1);
-    --input-bg: rgba(255,255,255,0.06);
+    --primary-gradient: linear-gradient(135deg, #ff7a29 0%, #ff9f40 100%);
+    --secondary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --dark-gradient: linear-gradient(135deg, #0f1e38 0%, #1f2f58 100%);
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
   }
 
-  body, html {
-    background: linear-gradient(135deg,#0f1e38 0%,#1f2f58 80%);
-    color: var(--fg);
-    font-family: "Inter", system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    margin: 0;
-    padding: 0;
+  body {
+    background: var(--dark-gradient);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
   }
 
-  .page-wrapper {
-    max-width: 520px;
-    margin: 60px auto 40px;
-    padding: 0 12px;
-  }
-
-  .fake-note {
-    text-align: center;
-    font-style: italic;
-    margin-bottom: 12px;
-    font-size: .9rem;
-    color: #d1d9f7;
-  }
-
-  .card-wrapper {
-    background: var(--gradient-border);
-    border-radius: var(--radius);
-    padding: 2px;
+  .payment-hero {
+    max-width: 1000px;
+    margin: 40px auto;
+    background: var(--glass-bg);
+    padding: 40px;
+    border-radius: 32px;
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    box-shadow: var(--glass-shadow);
+    border: 1px solid var(--glass-border);
+    position: relative;
     overflow: hidden;
   }
 
-  .card {
-    background: var(--panel-bg);
-    border-radius: calc(var(--radius) - 2px);
-    padding: 28px 24px;
-    box-shadow: var(--shadow);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  .payment-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,122,41,0.1) 0%, transparent 70%);
+    animation: float 6s ease-in-out infinite;
   }
 
-  .card-header {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin: 0;
-    color: #fff;
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+  }
+
+  .title {
+    font-size: 3rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #ffffff 0%, #ff9f40 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 10px 30px rgba(255, 122, 41, 0.3);
+    position: relative;
+  }
+
+  .subtitle {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 1.2rem;
+    color: #e2e8ff;
+    opacity: 0.9;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+
+  .qr-section {
+    position: relative;
+    margin-bottom: 40px;
     text-align: center;
   }
 
-  .flex-row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .field-group {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  .qr-frame {
+    display: inline-block;
+    padding: 20px;
+    background: var(--glass-bg);
+    border-radius: 24px;
+    border: 2px solid var(--glass-border);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
     position: relative;
+    overflow: hidden;
   }
 
-  .field-group label {
-    font-size: .75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .8px;
-    margin: 0;
-    display: flex;
-    gap: 4px;
-    color: #c5d0f3;
+  .qr-frame::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
   }
 
-  .input {
-    width: 100%;
-    padding: 14px 16px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.15);
-    background: var(--input-bg);
-    color: #eef5ff;
-    font-size: 14px;
-    outline: none;
-    transition: var(--transition);
-    box-sizing: border-box;
+  .preview-img {
+    width: 280px;
+    height: 280px;
+    border-radius: 16px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
   }
 
-  .input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 5px rgba(255,122,41,0.25);
-    background: rgba(255,255,255,0.1);
+  .preview-img:hover {
+    transform: scale(1.05);
   }
 
-  .small {
-    flex: 1 1 100px;
-  }
-
-  .btn-pay {
-    background: var(--accent);
-    border: none;
-    color: #fff;
-    padding: 14px;
-    font-size: 1rem;
+  .qr-label {
+    display: block;
+    margin-top: 15px;
+    font-size: 1.1rem;
+    color: #ffffff;
     font-weight: 600;
-    border-radius: 999px;
-    cursor: pointer;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    transition: background .25s;
-  }
-  .btn-pay:hover {
-    background: var(--accent-hover);
   }
 
-  .summary {
-    margin-top: 8px;
+  .details-card {
+    background: var(--glass-bg);
+    padding: 30px;
+    border-radius: 24px;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(15px);
+    color: #fff;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .details-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--secondary-gradient);
+  }
+
+  .details-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .details-card h3 i {
+    color: #ff7a29;
+  }
+
+  .detail-line {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255,255,255,0.04);
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 1rem;
-    gap: 8px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 1.1rem;
+    color: #f2f4ff;
+    transition: all 0.3s ease;
   }
 
-  .total-label {
-    font-weight: 600;
-    color: #fff;
+  .detail-line:hover {
+    background: rgba(255, 255, 255, 0.05);
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0 -15px;
+    border-radius: 12px;
   }
 
-  .total-value {
-    background: #1f2f58;
-    padding: 6px 14px;
-    border-radius: 999px;
+  .detail-line:last-child {
+    border-bottom: none;
+  }
+
+  .detail-line span:first-child {
+    font-weight: 500;
+    color: #cdd9ff;
+  }
+
+  .detail-line strong {
     font-weight: 700;
-    color: #fff;
-    min-width: 100px;
-    text-align: right;
+    color: #ffffff;
+    font-size: 1.2rem;
   }
 
-  .note {
-    font-size: .75rem;
-    color: var(--muted);
+  .instructions-section {
+    margin-bottom: 40px;
+  }
+
+  .section-title {
     text-align: center;
-    margin-top: 4px;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, #ffffff 0%, #667eea 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  @media (max-width: 640px) {
-    .flex-row {
+  .instructions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .instruction-card {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .instruction-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: var(--primary-gradient);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .instruction-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .instruction-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .instruction-card strong {
+    font-size: 1.2rem;
+    color: #ffffff;
+    margin-bottom: 15px;
+    display: block;
+    font-weight: 700;
+  }
+
+  .instruction-card ol {
+    margin: 0;
+    padding-left: 20px;
+    color: #e9f0ff;
+  }
+
+  .instruction-card li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+    position: relative;
+  }
+
+  .instruction-card code {
+    background: rgba(255, 122, 41, 0.2);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #ff7a29;
+    border: 1px solid rgba(255, 122, 41, 0.3);
+  }
+
+  .instruction-card em {
+    color: #ffd700;
+    font-style: italic;
+  }
+
+  .payment-action {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .btn-pay {
+    background: var(--primary-gradient);
+    padding: 20px 40px;
+    width: 100%;
+    max-width: 400px;
+    border: none;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 15px 35px rgba(255, 122, 41, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-pay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .btn-pay:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 45px rgba(255, 122, 41, 0.6);
+  }
+
+  .btn-pay:hover::before {
+    left: 100%;
+  }
+
+  .btn-pay:active {
+    transform: translateY(-1px);
+  }
+
+  .warning-note {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1rem;
+    color: #ffd700;
+    opacity: 0.9;
+    font-weight: 500;
+    padding: 15px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+  }
+
+  .provider-logos {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+  }
+
+  .provider-logo {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .provider-logo:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .payment-hero {
+      margin: 20px auto;
+      padding: 25px;
+      border-radius: 20px;
+    }
+
+    .title {
+      font-size: 2.2rem;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+    }
+
+    .preview-img {
+      width: 220px;
+      height: 220px;
+    }
+
+    .instructions-grid {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+
+    .instruction-card {
+      padding: 20px;
+    }
+
+    .details-card {
+      padding: 20px;
+    }
+
+    .detail-line {
       flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
     }
-    .small {
-      flex: 1 1 100%;
+
+    .btn-pay {
+      padding: 18px 30px;
+      font-size: 1.2rem;
+    }
+
+    .provider-logos {
+      gap: 15px;
+    }
+
+    .provider-logo {
+      width: 50px;
+      height: 50px;
+      font-size: 1.3rem;
     }
   }
 
+  @media (max-width: 480px) {
+    .payment-hero {
+      padding: 20px;
+      margin: 15px auto;
+    }
+
+    .title {
+      font-size: 1.8rem;
+    }
+
+    .subtitle {
+      font-size: 1rem;
+    }
+
+    .preview-img {
+      width: 200px;
+      height: 200px;
+    }
+
+    .section-title {
+      font-size: 1.6rem;
+    }
+
+    .instruction-card strong {
+      font-size: 1.1rem;
+    }
+
+    .btn-pay {
+      padding: 16px 25px;
+      font-size: 1.1rem;
+    }
+  }
+
+  /* Animation for cards */
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .instruction-card {
+    animation: slideInUp 0.6s ease forwards;
+  }
+
+  .instruction-card:nth-child(1) { animation-delay: 0.1s; }
+  .instruction-card:nth-child(2) { animation-delay: 0.2s; }
+  .instruction-card:nth-child(3) { animation-delay: 0.3s; }
+  .instruction-card:nth-child(4) { animation-delay: 0.4s; }
+  .instruction-card:nth-child(5) { animation-delay: 0.5s; }
+  .instruction-card:nth-child(6) { animation-delay: 0.6s; }
 </style>
 
-<div class="page-wrapper" aria-label="Fake payment page">
-  <div class="fake-note">This is a <strong>FAKE PAYMENT</strong>. Just for demo purpose</div>
+<div class="payment-hero">
+<h1 class="title">Secure Payment Processing</h1>
+<p class="subtitle">Choose your preferred mobile payment method for fast and secure transaction processing.</p>
+  <!-- QR Code Section -->
+  <div class="qr-section">
+    <div class="qr-frame">
+      <img src="{% static 'images/qr.jpg' %}" class="preview-img" alt="Scan to Pay QR Code" />
+      <span class="qr-label">📱 Scan QR Code to Pay</span>
+    </div>
+  </div>
 
-  <div class="card-wrapper" role="form" aria-labelledby="payment-header">
-    <div class="card">
-      <div class="card-header" id="payment-header">Payment Details</div>
+  <!-- Payment Provider Logos -->
+  <div class="provider-logos">
+    <div class="provider-logo">💳</div>
+    <div class="provider-logo">📱</div>
+    <div class="provider-logo">🏦</div>
+    <div class="provider-logo">🔐</div>
+    <div class="provider-logo">⚡</div>
+  </div>
 
-      <div class="flex-row" style="justify-content: space-between; align-items: center;">
-        <div style="flex:1;">
-          <div class="field-group">
-            <label for="cardNumber">Card Number</label>
-            <input type="text" id="cardNumber" class="input" placeholder="xxxx xxxx xxxx xxxx" aria-label="Card number" required maxlength="19" inputmode="numeric" />
-          </div>
-        </div>
-        <div style="display:flex; gap:12px; flex-wrap: wrap; margin-top:0;">
-          <div class="field-group small">
-            <label for="expMonth">Month</label>
-            <input type="text" id="expMonth" class="input" placeholder="MM" aria-label="Expiry month" required maxlength="2" />
-          </div>
-          <div class="field-group small">
-            <label for="expYear">Year</label>
-            <input type="text" id="expYear" class="input" placeholder="YY" aria-label="Expiry year" required maxlength="2" />
-          </div>
-          <div class="field-group small">
-            <label for="cvv">CV Code</label>
-            <input type="password" id="cvv" class="input" placeholder="CVV" aria-label="CV code" required maxlength="4" />
-          </div>
-        </div>
+  <!-- Payment Details -->
+  <div class="details-card">
+    <h3><i class="fas fa-credit-card"></i> Payment Information</h3>
+    
+    <div class="detail-line">
+      <span>Payment Number:</span>
+      <strong>134987550</strong>
+    </div>
+
+    <div class="detail-line">
+      <span>Account Name:</span>
+      <strong>ALOYCE ARON KESSY</strong>
+    </div>
+
+    <div class="detail-line">
+      <span>Amount to Pay:</span>
+      <strong style="color: #ff7a29; font-size: 1.4rem;">Tsh {{ total }}</strong>
+    </div>
+  </div>
+
+  <!-- Payment Instructions -->
+  <div class="instructions-section">
+    <h2 class="section-title">How to Pay (Quick Steps)</h2>
+    
+    <div class="instructions-grid">
+      <!-- Airtel Money -->
+      <div class="instruction-card">
+        <strong>📶 Airtel Money</strong>
+        <ol>
+          <li>Dial <code>*150*60#</code></li>
+          <li>Choose "Pay Bill" or "Lipa kwa Simu"</li>
+          <li>Enter merchant: <em>TIPS</em> or "Lipa kwa Namba"</li>
+          <li>Enter number: <strong>134987550</strong></li>
+          <li>Enter amount & PIN to confirm</li>
+        </ol>
       </div>
 
-      <div class="summary" aria-label="Final payment summary">
-        <div class="total-label">Final Payment</div>
-        <div class="total-value">Tsh. {{ total }}</div>
+      <!-- Tigo Pesa -->
+      <div class="instruction-card">
+        <strong>🎯 Tigo Pesa</strong>
+        <ol>
+          <li>Dial <code>*150*01#</code></li>
+          <li>Select "Pay Bill" or "Lipa kwa Simu"</li>
+          <li>Enter number: <strong>134987550</strong></li>
+          <li>Enter amount & confirm with PIN</li>
+        </ol>
       </div>
 
-      <button class="btn-pay" aria-label="Pay now">
-        <a href="/payment-success"><i class="fa fa-credit-card" aria-hidden="true"></i> Pay</a>
+      <!-- M-Pesa -->
+      <div class="instruction-card">
+        <strong>🟢 Vodacom M-Pesa</strong>
+        <ol>
+          <li>Dial <code>*150*00#</code></li>
+          <li>Choose "Lipa kwa M-Pesa"</li>
+          <li>Select "Lipa kwa Namba"</li>
+          <li>Enter: <strong>134987550</strong></li>
+          <li>Enter amount & PIN</li>
+        </ol>
+      </div>
+
+      <!-- NMB -->
+      <div class="instruction-card">
+        <strong>🔵 NMB Mkononi</strong>
+        <ol>
+          <li>Dial <code>*150*66#</code> or use NMB app</li>
+          <li>Select "Pay Bill" or "Lipa kwa TIPS"</li>
+          <li>Enter number: <strong>134987550</strong></li>
+          <li>Enter amount & approve with PIN</li>
+        </ol>
+      </div>
+
+      <!-- SimBanking -->
+      <div class="instruction-card">
+        <strong>🏦 SimBanking</strong>
+        <ol>
+          <li>Dial <code>*150*03#</code> or use bank app</li>
+          <li>Choose "Pay" → "Lipa Hapa"</li>
+          <li>Enter number: <strong>134987550</strong></li>
+          <li>Confirm with banking PIN</li>
+        </ol>
+      </div>
+
+      <!-- Other Options -->
+      <div class="instruction-card">
+        <strong>🔍 Other Options</strong>
+        <ol>
+          <li>Scan QR code with mobile money app</li>
+          <li>Visit bank branch with Payment Number</li>
+          <li>After payment, click "I Have Paid" below</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Action -->
+  <div class="payment-action">
+    <form action="/payment-success" method="GET">
+      <button type="submit" class="btn-pay">
+        <i class="fas fa-check-circle"></i> I Have Paid - Verify My Order
       </button>
-
-      <div class="note">Clicking Pay will simulate a successful transaction. No real charge will occur.</div>
+    </form>
+    <div class="warning-note">
+      ⚡ After clicking, your order will be verified immediately for processing!
     </div>
   </div>
 </div>

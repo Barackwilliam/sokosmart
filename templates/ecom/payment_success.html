@@ -2,56 +2,389 @@
 {% load static %}
 
 {% block content %}
-<style media="screen">
-  .success-page{
-  max-width:300px;
-  display:block;
-  margin: 0 auto;
-  text-align: center;
-      position: relative;
-    top: 50%;
-    transform: perspective(1px) translateY(50%)
-}
-.success-page img{
-  max-width:62px;
-  display: block;
-  margin: 0 auto;
-}
+<style>
+  :root {
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --accent-color: #ff7a29;
+    --text-color: #e8ebf7;
+    --muted-color: #8fa3bf;
+    --bg-gradient: linear-gradient(135deg,#0f1e38 0%,#1f2f58 80%);
+  }
 
-.btn-view-orders{
-  display: block;
-  border:1px solid #47c7c5;
-  width:100px;
-  margin: 0 auto;
-  margin-top: 45px;
-  padding: 10px;
-  color:#fff;
-  background-color:#47c7c5;
-  text-decoration: none;
-  margin-bottom: 20px;
-}
-h2{
-  /* color:#0014ff; */
-    margin-top: 25px;
-    color: #fefffd;
+  body {
+    background: var(--bg-gradient);
+    color: var(--text-color);
+    font-family: 'Inter', system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+  }
 
-}
-p{
-  color: #fefffd;
-}
-a{
-  text-decoration: none;
-}
+  .success-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 80px 20px 40px;
+    text-align: center;
+  }
+
+  .success-icon {
+    width: 100px;
+    height: 100px;
+    background: var(--success-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    position: relative;
+    animation: bounce 0.6s ease-in-out;
+  }
+
+  .success-icon::before {
+    content: '✓';
+    font-size: 3rem;
+    color: white;
+    font-weight: bold;
+  }
+
+  @keyframes bounce {
+    0%, 20%, 60%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-20px); }
+    80% { transform: translateY(-10px); }
+  }
+
+  .success-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #10b981, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .success-message {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  /* Guest User Message */
+  .guest-alert {
+    background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(245,158,11,0.05));
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 12px;
+    padding: 25px;
+    margin: 30px 0;
+    text-align: center;
+    position: relative;
+  }
+
+  .guest-alert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--warning-color);
+    border-radius: 12px 12px 0 0;
+  }
+
+  .guest-alert h3 {
+    color: var(--warning-color);
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+  }
+
+  .guest-alert p {
+    color: var(--muted-color);
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+  }
+
+  .benefit-item {
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .benefit-item i {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .benefit-item span {
+    font-size: 0.85rem;
+    color: var(--text-color);
+    font-weight: 500;
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 25px 0;
+  }
+
+  .btn-primary {
+    background: var(--accent-color);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+  }
+
+  .btn-primary:hover {
+    background: #e06622;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255,122,41,0.3);
+  }
+
+  .btn-secondary {
+    background: rgba(255,255,255,0.1);
+    color: var(--text-color);
+    padding: 14px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+  }
+
+  .btn-success {
+    background: var(--success-color);
+    color: white;
+    padding: 14px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+  }
+
+  .btn-success:hover {
+    background: #059669;
+    transform: translateY(-2px);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+
+  .next-steps {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .next-steps h3 {
+    color: var(--text-color);
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .success-container {
+      padding: 60px 15px 30px;
+    }
+
+    .success-title {
+      font-size: 2rem;
+    }
+
+    .btn-group, .action-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .btn-primary, .btn-secondary, .btn-success {
+      width: 100%;
+      max-width: 300px;
+      justify-content: center;
+    }
+
+    .benefits-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+  }
 </style>
-<div class="success-page" style="top:auto;">
-   <img  src="http://share.ashiknesin.com/green-checkmark.png" class="center" alt="" />
-  <h2>Payment Successful !</h2>
-  <p>We are delighted to inform you that we received your payments.</p>
-  <br>
-  <br>
-  <a style="text-decoration:none;" href="/my-order" class="btn btn-success btn-lg">View Orders/Track Orders</a>
-  <a style="text-decoration:none; color: red;" href="/customer-home">Continue Shopping</a>
+
+<!-- Confetti Effect -->
+<div class="confetti" id="confetti"></div>
+
+<div class="success-container">
+  <div class="success-icon"></div>
+  
+  <h1 class="success-title">Payment Successful!</h1>
+  
+  <p class="success-message">
+    🎉 Thank you for your order! Your payment has been processed successfully and your order is being prepared.
+  </p>
+
+  <!-- Guest User Alert -->
+  {% if not user.is_authenticated %}
+  <div class="guest-alert">
+    <h3>📋 Create Account to Track Your Order</h3>
+    <p>
+      <strong>You completed this order as a guest.</strong> 
+      To track your order status, receive delivery updates, and save your order history, 
+      please create a free account.
+    </p>
+
+    <div class="benefits-grid">
+      <div class="benefit-item">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>Real-time Tracking</span>
+      </div>
+      <div class="benefit-item">
+        <i class="fas fa-bell"></i>
+        <span>Status Updates</span>
+      </div>
+      <div class="benefit-item">
+        <i class="fas fa-history"></i>
+        <span>Order History</span>
+      </div>
+      <div class="benefit-item">
+        <i class="fas fa-bolt"></i>
+        <span>Faster Checkout</span>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <a href="customersignup" class="btn-primary">
+        <i class="fas fa-user-plus"></i> Create Free Account
+      </a>
+      <a href="{% url 'customerlogin' %}" class="btn-secondary">
+        <i class="fas fa-sign-in-alt"></i> Login to Account
+      </a>
+    </div>
+
+    <p style="font-size: 0.9rem; color: var(--muted-color); margin-top: 15px;">
+      <i class="fas fa-info-circle"></i> 
+      Your current order will be processed, but tracking requires an account.
+    </p>
+  </div>
+  {% endif %}
+
+  <!-- Action Buttons -->
+  <div class="action-buttons">
+    {% if user.is_authenticated %}
+    <a href="{% url 'my-order' %}" class="btn-success">
+      <i class="fas fa-shopping-bag"></i> View & Track Orders
+    </a>
+    {% else %}
+    <a href="/customersignup" class="btn-success">
+      <i class="fas fa-user-plus"></i> Create Account to Track
+    </a>
+    {% endif %}
+    
+    <a href="{% url 'customer-home' %}" class="btn-secondary">
+      <i class="fas fa-shopping-cart"></i> Continue Shopping
+    </a>
+  </div>
+
+  <!-- Next Steps -->
+  <div class="next-steps">
+    <h3>What's Next?</h3>
+    <div class="benefits-grid">
+      <div class="benefit-item">
+        <i class="fas fa-clock"></i>
+        <span>Order Processing<br><small>Within 24 hours</small></span>
+      </div>
+      <div class="benefit-item">
+        <i class="fas fa-truck"></i>
+        <span>Delivery Updates<br><small>Real-time tracking</small></span>
+      </div>
+      <div class="benefit-item">
+        <i class="fas fa-phone"></i>
+        <span>Support Available<br><small>24/7 customer care</small></span>
+      </div>
+    </div>
+  </div>
 </div>
-<br><br><br><br>
-<br><br><br><br>
+
+<script>
+  // Simple confetti effect
+  document.addEventListener('DOMContentLoaded', function() {
+    const confettiContainer = document.getElementById('confetti');
+    const colors = ['#ff7a29', '#10b981', '#3b82f6', '#8b5cf6', '#f59e0b'];
+    
+    for (let i = 0; i < 50; i++) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'fixed';
+      confetti.style.width = '8px';
+      confetti.style.height = '8px';
+      confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+      confetti.style.borderRadius = '50%';
+      confetti.style.left = Math.random() * 100 + 'vw';
+      confetti.style.top = '-10px';
+      confetti.style.opacity = '0.8';
+      confetti.style.animation = `fall ${Math.random() * 3 + 2}s linear forwards`;
+      
+      confettiContainer.appendChild(confetti);
+    }
+  });
+
+  // Add falling animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+
 {% endblock content %}

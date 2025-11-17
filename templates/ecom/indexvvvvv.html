@@ -1,0 +1,695 @@
+{% extends 'ecom/homebase.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  :root {
+    --bg-gradient: linear-gradient(135deg, #0f1e38 0%, #1f2f58 80%);
+    --surface: #1f2f58;
+    --card: #1d2a4f;
+    --text: #e8ebf7;
+    --muted: #8fa3bf;
+    --accent: #ff7a29;
+    --accent-dark: #e06622;
+    --radius: 1rem;
+    --shadow: 0 20px 40px -10px rgba(15, 30, 56, 0.35);
+    --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+    --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.2);
+  }
+
+  /* ========== BASE STYLES ========== */
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* ========== CATEGORIES SECTION ========== */
+  .categories-section {
+    padding: 2rem 1rem;
+    position: relative;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .categories-scroll {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .categories-container {
+    display: flex;
+    gap: 0.8rem;
+    overflow-x: auto;
+    padding: 1rem 0.5rem;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-padding: 0 1rem;
+  }
+
+  .categories-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-card {
+    min-width: 140px;
+    height: 160px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+    scroll-snap-align: start;
+    transition: all 0.3s ease;
+    background: var(--card);
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .category-card.active {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--accent);
+  }
+
+  .category-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+  }
+
+  .category-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: linear-gradient(to top, rgba(15, 30, 56, 0.95), transparent 80%);
+    backdrop-filter: blur(5px);
+  }
+
+  .category-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--text);
+  }
+
+  .category-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+  }
+
+  .category-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* ========== PRODUCTS SECTION ========== */
+  .products-section {
+    padding: 2rem 1rem;
+    background: var(--surface);
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .product-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .product-card.zoomed {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.85);
+    width: 85vw;
+    max-width: 320px;
+    height: auto;
+    max-height: 70vh;
+    z-index: 1000;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid var(--accent);
+    animation: zoomIn 0.3s ease;
+  }
+
+  .product-card.zoomed .product-img {
+    height: 180px;
+    object-fit: contain;
+  }
+
+  .product-card.zoomed .product-info {
+    padding: 1rem;
+  }
+
+  .product-card.zoomed .product-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-card.zoomed .product-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .product-card.zoomed .add-to-cart {
+    font-size: 0.85rem;
+    padding: 0.7rem;
+    margin-top: 0.8rem;
+  }
+
+  @keyframes zoomIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.7);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(0.85);
+    }
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 30, 56, 0.92);
+    backdrop-filter: blur(15px);
+    z-index: 999;
+    display: none;
+  }
+
+  .close-btn {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: var(--accent);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 1001;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+  }
+
+  .close-btn:active {
+    transform: scale(0.9);
+  }
+
+  .product-badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: var(--accent);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.7rem;
+    z-index: 2;
+  }
+
+  .product-img-container {
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: var(--transition);
+    padding: 0.5rem;
+  }
+
+  .product-info {
+    padding: 0.8rem;
+  }
+
+  .product-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .product-price {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.9rem; /* Reduced from 1rem */
+  }
+
+  .add-to-cart {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.5rem; /* Reduced padding */
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.75rem; /* Reduced font size */
+    width: 100%;
+    margin-top: 0.6rem;
+    transition: var(--transition);
+    font-weight: 500;
+  }
+
+  .add-to-cart:active {
+    transform: scale(0.95);
+    background: var(--accent-dark);
+  }
+
+  /* ========== TOUCH GESTURES ========== */
+  .touch-feedback:active {
+    transform: scale(0.96);
+  }
+
+  /* ========== RESPONSIVE DESIGN ========== */
+  @media (max-width: 480px) {
+    .categories-section,
+    .products-section {
+      padding: 1.5rem 0.8rem;
+    }
+    
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .category-card {
+      min-width: 120px;
+      height: 140px;
+    }
+
+    .category-title {
+      font-size: 0.8rem;
+    }
+
+    .products-grid {
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.8rem;
+    }
+
+    .product-img-container {
+      height: 120px;
+    }
+
+    .product-title {
+      font-size: 0.8rem;
+    }
+
+    .product-price {
+      font-size: 0.85rem; /* Smaller on mobile */
+    }
+
+    .add-to-cart {
+      font-size: 0.7rem; /* Smaller on mobile */
+      padding: 0.45rem;
+    }
+
+    /* Zoomed product adjustments for mobile */
+    .product-card.zoomed {
+      width: 90vw;
+      max-width: 280px;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+
+    .product-card.zoomed .product-img {
+      height: 150px;
+    }
+
+    .product-card.zoomed .product-title {
+      font-size: 0.9rem;
+    }
+
+    .product-card.zoomed .product-price {
+      font-size: 1rem;
+    }
+
+    .product-card.zoomed .add-to-cart {
+      font-size: 0.8rem;
+      padding: 0.6rem;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .products-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    
+    .category-card {
+      min-width: 110px;
+      height: 130px;
+    }
+
+    .product-card.zoomed {
+      width: 95vw;
+      max-width: 260px;
+    }
+  }
+
+  /* ========== LARGE SCREENS ========== */
+  @media (min-width: 1024px) {
+    .categories-section,
+    .products-section {
+      padding: 3rem 2rem;
+    }
+    
+    .products-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .product-img-container {
+      height: 180px;
+    }
+
+    .product-card.zoomed {
+      max-width: 350px;
+      transform: translate(-50%, -50%) scale(0.9);
+    }
+  }
+
+  /* ========== ACCESSIBILITY ========== */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+
+<!-- ========== OVERLAY FOR ZOOMED PRODUCTS ========== -->
+<div class="overlay" id="overlay"></div>
+
+<!-- ========== CATEGORIES SECTION ========== -->
+<section class="categories-section">
+  <h2 class="section-title">Shop By Categories</h2>
+  <div class="categories-scroll">
+    <div class="categories-container" id="categoriesContainer">
+      {% for category in categories %}
+      <div class="category-card touch-feedback" 
+           data-category="{{ category.id }}"
+           onclick="filterProducts('{{ category.id }}')">
+        <img src="{{ category.category_image }}" alt="{{ category.name }}" class="category-img" loading="lazy">
+        <div class="category-overlay">
+          <h3 class="category-title">{{ category.name }}</h3>
+          <button class="category-btn">Explore</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ========== PRODUCTS SECTION ========== -->
+<section class="products-section">
+  <h2 class="section-title">Featured Products</h2>
+  <div class="products-grid" id="productsGrid">
+    {% for product in products %}
+    <div class="product-card touch-feedback" 
+         data-product="{{ product.id }}"
+         onclick="zoomProduct(this)">
+      {% if product.discount %}
+      <span class="product-badge">-{{ product.discount }}%</span>
+      {% endif %}
+      <div class="product-img-container">
+        <img src="{{ product.product_image }}" alt="{{ product.name }}" class="product-img" loading="lazy">
+      </div>
+      <div class="product-info">
+        <h3 class="product-title">{{ product.name }}</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+          <span class="product-price">Tsh. {{ product.price|floatformat:0 }}</span>
+          <button class="add-to-cart" onclick="event.stopPropagation(); addToCart('{{ product.id }}')">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ========== INTERACTIVE JAVASCRIPT ========== -->
+<script>
+  // Touch and gesture handling
+  document.addEventListener('DOMContentLoaded', function() {
+    let startX, startY;
+    let currentZoomedProduct = null;
+
+    // Touch start for products
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        this.style.transition = 'none';
+      });
+
+      card.addEventListener('touchmove', function(e) {
+        if (!startX || !startY) return;
+        
+        const diffX = e.touches[0].clientX - startX;
+        const diffY = e.touches[0].clientY - startY;
+        
+        // Only apply transform if it's not a scroll gesture
+        if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10) {
+          const scale = 1 - Math.abs(diffY) / 100;
+          this.style.transform = `scale(${Math.max(0.95, scale)})`;
+        }
+      });
+
+      card.addEventListener('touchend', function() {
+        this.style.transition = 'all 0.3s ease';
+        this.style.transform = 'scale(1)';
+        startX = startY = null;
+      });
+    });
+
+    // Swipe to close zoomed product
+    document.addEventListener('touchstart', function(e) {
+      if (currentZoomedProduct) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      }
+    });
+
+    document.addEventListener('touchend', function(e) {
+      if (currentZoomedProduct && startX) {
+        const diffX = e.changedTouches[0].clientX - startX;
+        const diffY = e.changedTouches[0].clientY - startY;
+        
+        // If swipe down more than 50px, close product
+        if (diffY > 50 && Math.abs(diffX) < 50) {
+          closeZoomedProduct();
+        }
+      }
+      startX = startY = null;
+    });
+
+    // Auto-scroll categories with pause on touch
+    const categoriesContainer = document.getElementById('categoriesContainer');
+    let scrollInterval;
+    let isPaused = false;
+
+    function startAutoScroll() {
+      if (isPaused) return;
+      
+      scrollInterval = setInterval(() => {
+        const scrollLeft = categoriesContainer.scrollLeft;
+        const maxScroll = categoriesContainer.scrollWidth - categoriesContainer.clientWidth;
+        
+        if (scrollLeft >= maxScroll - 10) {
+          categoriesContainer.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          categoriesContainer.scrollBy({ left: 150, behavior: 'smooth' });
+        }
+      }, 3000);
+    }
+
+    function stopAutoScroll() {
+      clearInterval(scrollInterval);
+    }
+
+    // Start auto-scroll
+    startAutoScroll();
+
+    // Pause on interaction
+    categoriesContainer.addEventListener('touchstart', () => {
+      isPaused = true;
+      stopAutoScroll();
+    });
+
+    categoriesContainer.addEventListener('touchend', () => {
+      setTimeout(() => {
+        isPaused = false;
+        startAutoScroll();
+      }, 3000);
+    });
+
+    // Keyboard accessibility
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && currentZoomedProduct) {
+        closeZoomedProduct();
+      }
+    });
+  });
+
+  // Product zoom functionality
+  function zoomProduct(element) {
+    const overlay = document.getElementById('overlay');
+    const productsGrid = document.getElementById('productsGrid');
+    
+    // Close any currently zoomed product
+    if (window.currentZoomedProduct) {
+      closeZoomedProduct();
+      return;
+    }
+
+    // Create close button
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'close-btn';
+    closeBtn.innerHTML = '×';
+    closeBtn.onclick = closeZoomedProduct;
+    
+    // Add zoom class to clicked product
+    element.classList.add('zoomed');
+    overlay.style.display = 'block';
+    document.body.appendChild(closeBtn);
+    window.currentZoomedProduct = element;
+    window.closeButton = closeBtn;
+
+    // Disable background scroll
+    document.body.style.overflow = 'hidden';
+
+    // Add click outside to close
+    overlay.onclick = closeZoomedProduct;
+  }
+
+  function closeZoomedProduct() {
+    const overlay = document.getElementById('overlay');
+    
+    if (window.currentZoomedProduct) {
+      window.currentZoomedProduct.classList.remove('zoomed');
+      window.currentZoomedProduct = null;
+    }
+    
+    if (window.closeButton) {
+      window.closeButton.remove();
+      window.closeButton = null;
+    }
+    
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  // Filter products by category
+  function filterProducts(categoryId) {
+    const categoryCards = document.querySelectorAll('.category-card');
+    categoryCards.forEach(card => {
+      card.classList.remove('active');
+      if (card.dataset.category === categoryId) {
+        card.classList.add('active');
+      }
+    });
+    
+    // Here you would typically make an AJAX request to filter products
+    // For now, we'll just scroll to products section
+    document.querySelector('.products-section').scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }
+
+  // Add to cart functionality
+  function addToCart(productId) {
+    // Add touch feedback
+    const button = event.target;
+    button.style.transform = 'scale(0.95)';
+    button.style.background = 'var(--accent-dark)';
+    
+    setTimeout(() => {
+      button.style.transform = '';
+      button.style.background = '';
+    }, 150);
+
+    // Here you would typically make an AJAX request to add to cart
+    console.log('Adding product to cart:', productId);
+    
+    // Show success feedback
+    if (typeof showToast === 'function') {
+      showToast('Product added to cart!');
+    }
+  }
+
+  // Simple toast notification
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      z-index: 1001;
+      font-weight: 500;
+      animation: slideUp 0.3s ease;
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.remove();
+    }, 3000);
+  }
+</script>
+
+{% endblock content %}
